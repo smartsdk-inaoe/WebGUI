@@ -1,0 +1,13 @@
+{{extend 'kurentolayout.html'}}
+{{block header}}
+<h1 style="text-indent: 45%;">
+    {{if request.args(0)=='new':}}
+        {{='New camera'}}
+    {{elif request.args(0)=='edit':}}
+        {{='Edit camera'}}
+    {{else:}}
+        {{='Cameras'}}
+    {{pass}}
+</h1>
+{{end}}
+{{=form}}

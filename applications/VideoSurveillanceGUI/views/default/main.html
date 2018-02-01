@@ -1,0 +1,190 @@
+{{extend 'kurentolayout.html'}}
+<script src="{{=URL('static','js/multi.js')}}"></script>
+{{block header}}
+{{end}}
+<div class="col-md-3">
+    <h3>
+        Camera management
+    </h3>
+    <div style="border-style:solid;border-width: 1px;border-color:#ddd;padding:5px 15px;">
+        <h4>Transition</h4>
+        <form action="" style="margin-left:20px;">
+          <input type="radio" name="gender" value="Manual" checked disabled> Manual<br>
+          <input type="radio" name="gender" value="Carousel" disabled> Carousel<br>
+          <input type="radio" name="gender" value="Automatic" disabled> Automatic<br>
+        </form>
+        <h4>Recording</h4>
+        <div id="rec_controls" style="margin-left:20px;">
+            <button onclick="record()" id="free_rec" type="button" style="width:200px;margin: auto;" disabled>Record</button>
+            <br/><br/>
+            <div id="time_rec">
+    	    Record 
+    	    <input type="text" name="rtime" value="10" style="width:30px;" disabled>
+    	    minutes. 
+    	    <button type="button" style="width:60px;" disabled>Rec</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-6">
+    <div id='live_view' class="col-md-11">
+        <h4>
+        </h4>
+        <canvas id="mycanvas" width="100%" height="110%" style="position:absolute">Your browser does not support the HTML5 canvas tag.</canvas>
+        <input type="text" id="videourl" value="" hidden>
+        <video id="video" autoplay style="width:100%;height:75%" poster="{{=URL('static','images/webrtc.png')}}"></video>
+    </div>
+    <div id="carousel" class="col-md-11" style="overflow-x:auto;overflow-y:hidden;">
+        <div style="width:139%;">
+            <div id="cam1" style="width:23%;margin-right:10px;display:inline-block;" onclick="changeCam(c1)">
+                <span><br/></span>
+                <video id="video1" autoplay style="width:100%" poster="{{=URL('static','images/webrtc.png')}}"></video>
+            </div>
+            <div id="cam2" style="width:23%;margin-right:10px;display:inline-block;" onclick="changeCam(c2)">
+                <span><br/></span>
+                <video id="video2" autoplay style="width:100%" poster="{{=URL('static','images/webrtc.png')}}"></video>
+            </div>
+            <div id="cam3" style="width:23%;margin-right:10px;height:180px;display:inline-block;" onclick="changeCam(c3)">
+                <span><br/></span>
+                <video id="video3" autoplay style="width:100%" poster="{{=URL('static','images/webrtc.png')}}"></video>
+            </div>
+            <div id="cam4" style="width:23%;margin-right:10px;display:inline-block;" onclick="changeCam(c4)">
+                <span>mycam<br/></span>
+                <video id="video4" autoplay style="width:100%" poster="{{=URL('static','images/webrtc.png')}}"></video>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-3">
+    <h3 style="text-align: center;">
+        Last activity
+    </h3>
+    <ul id="activity_log" style="border-style:solid;border-color:#000000;height:500px;padding-top:20px;overflow-y:auto;">
+        <!--li style="color:#aaa;">Finish recording (camera 1) - timestamp</li>
+        <li style="color:#aaa;"><a style="color:#aaa;">Event 4 (normal) - timestamp</a></li>
+        <li style="color:#aaa;"><a style="color:#aaa;">Event 3 (middle risk) - timestamp</a></li>
+        <li style="color:#aaa;">Begin recording (camera 1) - timestamp</li>
+        <li style="color:#aaa;"><a style="color:#aaa;">Event 2 (dangerous) - timestamp</a></li>
+        <li style="color:#aaa;"><a style="color:#aaa;">Event 1 (normal) - timestamp</a></li-->
+    </ul>
+</div>
+<script>
+	var c1;
+	var c2;
+	var c3;
+	var c4;
+	var currentC;
+
+	window.onload = function() {
+	    {{c=db.camera[1]}}
+	    c1 = new camera('{{=c.name}}','{{=c.c_zone}}','video1','1');
+            c1.ws.onopen = function(){start(c1)};
+	    {{c=db.camera[2]}}
+	    c2 = new camera('{{=c.name}}','{{=c.c_zone}}','video2','2');
+            c2.ws.onopen = function(){start(c2)};
+	    {{c=db.camera[3]}}
+	    c3 = new camera('{{=c.name}}','{{=c.c_zone}}','video3','3');
+            c3.ws.onopen = function(){start(c3)};
+	    {{c=db.camera[4]}}
+	    c4 = new camera('{{=c.name}}','{{=c.c_zone}}','video4','4');
+            c4.ws.onopen = function(){start(c4)};
+	    {{c=request.args(0) or '1'}}
+	    {{if int(c)>4:}}
+	    var name = "Camera {{=c}} (Not connected)";
+	    {{else:}}
+	    var name = c{{=c}}.name+' - '+c{{=c}}.zone;
+	    currentC = c{{=c}};
+	    updateCam();
+	    {{pass}}
+	    document.getElementById('live_view').childNodes[1].innerHTML=name;
+	    document.getElementById('cam1').childNodes[1].innerHTML=c1.name;
+	    document.getElementById('cam2').childNodes[1].innerHTML=c2.name;
+	    document.getElementById('cam3').childNodes[1].innerHTML=c3.name;
+	    document.getElementById('cam4').childNodes[1].innerHTML=c4.name;
+	}
+
+	window.onbeforeunload = function() {
+	    c1.close();
+            c2.close();
+            c3.close();
+            c4.close();
+	}
+
+	function connect() {
+            //start(c1);
+            start(c2);
+            start(c3);
+            start(c4);
+	}
+
+    function updateCam() {
+        var destination=document.getElementById('video');
+        if(currentC.stream)
+            destination.src = document.getElementById(currentC.id).src;
+        else{
+            destination.src = "";
+            showSpinner(destination);
+            setTimeout(updateCam, 500);
+        }
+    }
+
+    //setTimeout(connect, 2000);
+
+    //setTimeout(updateCam, 2100);
+    function record(){
+        var c=document.getElementById("mycanvas");
+        var ctx=c.getContext("2d");
+        if(document.getElementById("free_rec").textContent=="Record"){
+            //ctx.lineWidth="4";
+            //ctx.strokeStyle="green";
+            //ctx.rect(60,80,100,150);
+            //ctx.stroke();
+            ctx.fillStyle="red";
+            ctx.arc(30,30,10,0,2*Math.PI);
+            ctx.fill();
+            document.getElementById("free_rec").textContent="Stop";
+        }else{
+            ctx.clearRect(0, 0, c.width, c.height);
+            document.getElementById("free_rec").textContent="Record";
+        }
+    }
+
+    function changeCam(sender){
+        var destination=document.getElementById('live_view');
+        destination.childNodes[1].innerHTML=sender.name+' - '+sender.zone;
+        //destination.childNodes[7].src=sender.container.src;
+        currentC = sender;
+        updateCam();
+    }
+
+    var lastId = 0;
+    function askEvent(){
+        $.ajax({
+            url: "https://" + location.host + "/context/getNotifications/"+lastId,
+            success: function (data) {
+                //console.log(data);
+                var alerts = data.split(";");
+                lastId = alerts[0]
+                for(i=1;i<alerts.length;i++){
+                    var values = alerts[i].split(",");
+                    var color = "000";
+                    switch(values[0]) {
+                        case 'UnauthorizedSpeedDetection - smartphone-Leon':
+                            color = "00c";
+                            break;
+                        case 'PruebaTelefono':
+                            color = "444";
+                            break;
+                        default:
+                            color = "181";
+                    }
+                    var element = '<li style="color:#'+color+';">'+values[0]+' ('+values[1]+"@"+values[2]+") - "+values[3].replace("T"," ").replace(".00Z"," ")+"</li>";
+                    $("#activity_log").prepend(element);
+                }
+            }
+        });
+        if($("#activity_log > li").length>25)
+            $("#activity_log").children().last().remove();
+    }
+    setInterval(askEvent, 3000);
+</script>

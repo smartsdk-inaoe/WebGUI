@@ -1,0 +1,159 @@
+{{extend 'kurentolayout.html'}}
+{{block head}}<link rel="stylesheet" href="{{=URL('static','css/spectrum.css')}}"/>{{end}}
+{{block header}}
+<h1 style="text-indent: 37%;">
+    Marker settings
+</h1>
+{{end}}
+{{=form.custom.begin}}
+<div class="form-group col-sm-offset-1 col-sm-10">
+    <div class="col-sm-12">
+        {{=form.custom.widget.CarDetection}}{{=form.custom.label.CarDetection}}
+    </div>
+    <div id="CarDetection" class="col-sm-12" style="display:{{='block' if form.vars.CarDetection else 'none'}}">
+        <div class="col-sm-5">
+            Method
+            {{=form.custom.widget.CarDetectionM}}
+        </div>
+        <div class="col-sm-2">
+            Text<br/>
+            {{=form.custom.widget.CarDetectionT}}
+        </div>
+        <div class="col-sm-5">
+            Color<br/>
+            {{=form.custom.widget.CarDetectionC}}
+        </div>
+    </div>
+</div>
+<div class="form-group col-sm-offset-1 col-sm-10">
+    <div class="col-sm-12">
+        {{=form.custom.widget.PersonDetection}}{{=form.custom.label.PersonDetection}}
+    </div>
+    <div id="PersonDetection" class="col-sm-12" style="display:{{='block' if form.vars.PersonDetection else 'none'}}">
+        <div class="col-sm-5">
+            Method
+            {{=form.custom.widget.PersonDetectionM}}
+        </div>
+        <div class="col-sm-2">
+            Text<br/>
+            {{=form.custom.widget.PersonDetectionT}}
+        </div>
+        <div class="col-sm-5">
+            Color<br/>
+            {{=form.custom.widget.PersonDetectionC}}
+        </div>
+    </div>
+</div>
+<div class="form-group col-sm-offset-1 col-sm-10">
+    <div class="col-sm-12">
+        {{=form.custom.widget.BlobDetection}}{{=form.custom.label.BlobDetection}}
+    </div>
+    <div id="BlobDetection" class="col-sm-12" style="display:{{='block' if form.vars.BlobDetection else 'none'}}">
+        <div class="col-sm-5">
+            Method
+            {{=form.custom.widget.BlobDetectionM}}
+        </div>
+        <div class="col-sm-2">
+            Text<br/>
+            {{=form.custom.widget.BlobDetectionT}}
+        </div>
+        <div class="col-sm-5">
+            Color<br/>
+            {{=form.custom.widget.BlobDetectionC}}
+        </div>
+    </div>
+</div>
+<!--div class="form-group col-sm-offset-1 col-sm-10">
+    <div class="col-sm-12">
+        {{=form.custom.widget.DogDetection}}{{=form.custom.label.DogDetection}}
+    </div>
+    <div id="DogDetection" class="col-sm-12" style="display:{{='block' if form.vars.DogDetection else 'none'}}">
+        <div class="col-sm-6">
+            Method
+            {{=form.custom.widget.DogDetectionM}}
+        </div>
+        <div class="col-sm-6">
+            Color<br/>
+            {{=form.custom.widget.DogDetectionC}}
+        </div>
+    </div>
+</div-->
+<div class="form-group col-sm-offset-1 col-sm-10">
+    <div class="col-sm-12">
+        {{=form.custom.submit}}
+        <a id="update" href="#" class="btn btn-success" onclick="updateVars()">
+            Update
+        </a>
+    </div>
+</div>
+{{=form.custom.end}}
+<script src="{{=URL('static','js/spectrum.js')}}"></script>
+<script>
+var config = {
+                preferredFormat: "rgb",//"name",
+                showPalette: true,
+                showPaletteOnly: true,
+                showInitial: true,
+                showButtons: false,
+                palette: [
+                    ["Aquamarine","Azure","Beige","Black","Blue","BlueViolet","Brown","Chocolate"],
+                    ["Coral","Crimson","Cyan","Gold","Gray","Green","Indigo","Ivory"],
+                    ["Lavender","Lime","Magenta","Maroon","Olive","Orange","OrangeRed","Orchid"],
+                    ["Pink","Plum","Purple","Red","Salmon","Silver","SlateGray","SpringGreen"],
+                    ["Tan","Teal","Turquoise","Violet","White","Yellow"]
+                ]
+            };
+$("#no_table_CarDetectionC").spectrum(config);
+$("#no_table_PersonDetectionC").spectrum(config);
+$("#no_table_BlobDetectionC").spectrum(config);
+$("#no_table_DogDetectionC").spectrum(config);
+
+function showMe (sender, box) {
+    var vis = "none";
+    if(sender.checked){
+        vis = "block";
+    }
+    document.getElementById(box).style.display = vis;
+}
+
+function enableMe(sender, box){
+    if(sender.value=='3')
+        $(box).removeAttr("disabled");
+    else
+        $(box).prop("disabled", true);
+}
+
+{{if request.args(0):}}
+var ws = new WebSocket('wss://' + location.hostname + ':8443/player');
+ws.onopen = sendMessage;
+function sendMessage() {
+	var message = {id : 'updateLabels'};
+	var jsonMessage = JSON.stringify(message);
+	console.log('Sending message: ' + jsonMessage);
+	try{
+		ws.send(jsonMessage);
+	}catch(error){
+		console.error('('+this.name+') Error: '+error.message);
+	}
+	ws.close();
+}
+{{pass}}
+function updateVars() {
+    $.ajax({
+            url: "https://" + location.host + "/default/filters",
+            data: {
+                      {{for name in names:}}"{{=name}}M":$("#no_table_{{=name}}M").val(),
+                                            "{{=name}}C":$("#no_table_{{=name}}C").val(),
+                                            "{{=name}}T":$("#no_table_{{=name}}T").val(),{{pass}}
+            },
+            success: function (data) {
+              //$(".w2p_flash").html(data).slideDown();
+              //$('.w2p_flash').html('').hide();
+              $('.w2p_flash').removeClass("alert alert-dismissable").html('');
+              //if($(".w2p_flash").contents().first()[0]){
+                  //$.web2py.flash("ok");
+                  //$(".w2p_flash").contents().first()[0].textContent='mydata';
+            }
+    });
+}
+</script>

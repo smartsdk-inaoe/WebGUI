@@ -1,0 +1,85 @@
+{{extend 'kurentolayout.html'}}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+   integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+   crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
+   integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+   crossorigin=""></script>
+<style>
+#mapid { height: 480px; }
+</style>
+<div class="col-sm-3">
+    <h3>Search filters</h3>
+    <div class="form-group">{{=form.custom.widget.device}}</div>
+    <div class="form-group">{{=form.custom.widget.username}}</div>
+    <div class="form-group">{{=form.custom.widget.user}}</div>
+    <a id="update" href="#" class="btn btn-success" onclick="updateMarkers()">
+        Search
+    </a>
+</div>
+<div class="col-sm-9">
+    <h3>Map</h3>
+    <div class="container col-sm-12 justify-content-center" id="mapid"></div>
+</div>
+<script>
+var mymap = L.map('mapid').setView([19.03339, -98.31622],19);
+L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'OpenStreetMap',
+    maxZoom: 19
+}).addTo(mymap);
+
+var marker1 = L.marker();
+var marker2 = L.marker();
+var marker3 = L.marker();
+var marker4 = L.marker();
+
+function updateMarkers() {
+    //Camera 1
+    marker1.setLatLng([19.03353, -98.31621]).addTo(mymap);
+    marker1.bindPopup("<b>Camera name:</b> Hallway<br><b>Detections:</b> #<br><b>Other info:</b> #");
+    L.polygon([
+            [19.03353, -98.31621],
+            [19.03366, -98.31615],
+            [19.03363, -98.31610]
+        ])
+        .addTo(mymap);
+    //Camera 2
+    marker2.setLatLng([19.03171, -98.31600]).addTo(mymap);
+    marker2.bindPopup("<b>Camera name:</b> Main Entrance<br><b>Detections:</b> #<br><b>Other info:</b> #");
+    L.polygon([
+            [19.03171, -98.31600],
+            [19.03156, -98.31616],
+            [19.03167, -98.31622]
+        ])
+        .addTo(mymap);
+    //Camera 3
+    marker3.setLatLng([19.03139, -98.31694]).addTo(mymap);
+    marker3.bindPopup("<b>Camera name:</b> Parking Entrance<br><b>Detections:</b> #<br><b>Other info:</b> #");
+    L.polygon([
+            [19.03139, -98.31694],
+            [19.03143, -98.31707],
+            [19.03150, -98.31697]
+        ])
+        .addTo(mymap);
+    //Camera 4
+    marker4.setLatLng([19.03077, -98.31637]).addTo(mymap);
+    marker4.bindPopup("<b>Camera name:</b> Parking Lot<br><b>Detections:</b> #<br><b>Other info:</b> #");
+    L.polygon([
+            [19.03077, -98.31637],
+            [19.03086, -98.31693],
+            [19.03113, -98.31677]
+        ])
+        .addTo(mymap);
+    mymap.flyTo([19.0322,-98.31605],17);
+}
+
+function onMapClick(e) {
+    alert("You clicked the map at " + e.latlng);
+}
+
+mymap.on('click', onMapClick);
+marker1.on('click', marker1.getPopup().openPopup());
+marker2.on('click', marker2.getPopup().openPopup());
+marker3.on('click', marker3.getPopup().openPopup());
+marker4.on('click', marker4.getPopup().openPopup());
+</script>

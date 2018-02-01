@@ -1,0 +1,136 @@
+\hypertarget{namespacedefault}{}\section{default Namespace Reference}
+\label{namespacedefault}\index{default@{default}}
+
+
+Documentation of the default controller.  
+
+
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespacedefault_a123594d2c8890b62c80379e191485e3a}{index} ()
+\begin{DoxyCompactList}\small\item\em Default view. \end{DoxyCompactList}\item 
+def \hyperlink{namespacedefault_ae42db310ea72fd73d154e75b4d3d46f5}{main} ()
+\begin{DoxyCompactList}\small\item\em Main view. \end{DoxyCompactList}\item 
+def \hyperlink{namespacedefault_a2bed257028509c3e94a4db8fdada8d1e}{view} ()
+\begin{DoxyCompactList}\small\item\em Videos view. \end{DoxyCompactList}\item 
+def \hyperlink{namespacedefault_a7cdc6aef159950a3288288d454a745b5}{multi} ()
+\begin{DoxyCompactList}\small\item\em Multiple cameras/grid view. \end{DoxyCompactList}\item 
+def \hyperlink{namespacedefault_a407d6142ab401b6d0c0fd242f0547851}{add\+Camera} ()
+\begin{DoxyCompactList}\small\item\em Camera management view. \end{DoxyCompactList}\item 
+def \hyperlink{namespacedefault_a0c38fd1bc3457394fdda416d7a956135}{user} ()
+\begin{DoxyCompactList}\small\item\em User functionality. \end{DoxyCompactList}\item 
+def \hyperlink{namespacedefault_abcdcbacbec033ad1d6212d4feafc554a}{download} ()
+\begin{DoxyCompactList}\small\item\em Download functionality. \end{DoxyCompactList}\item 
+def \hyperlink{namespacedefault_adb399dd3ab3deaaaef6237d72fdb12e9}{call} ()
+\begin{DoxyCompactList}\small\item\em Services functionality. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Documentation of the default controller. 
+
+This file contains the functions that will be called when the user access a specific page. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacedefault_a407d6142ab401b6d0c0fd242f0547851}\label{namespacedefault_a407d6142ab401b6d0c0fd242f0547851}} 
+\index{default@{default}!add\+Camera@{add\+Camera}}
+\index{add\+Camera@{add\+Camera}!default@{default}}
+\subsubsection{\texorpdfstring{add\+Camera()}{addCamera()}}
+{\footnotesize\ttfamily def default.\+add\+Camera (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Camera management view. 
+
+This view allows the creation and edition of the cameras that will be used in the system. For security, it\textquotesingle{}s required that the user is logged in to view the page.
+
+
+\begin{DoxyParams}{Parameters}
+{\em (optional)request.\+args(0)} & it\textquotesingle{}s considered the id of the camera, thus the form will contain the data stored for that camera to update it.\\
+\hline
+\end{DoxyParams}
+When the page its accessed without argumenets, it displays a form to add a camera to the system. \mbox{\Hypertarget{namespacedefault_adb399dd3ab3deaaaef6237d72fdb12e9}\label{namespacedefault_adb399dd3ab3deaaaef6237d72fdb12e9}} 
+\index{default@{default}!call@{call}}
+\index{call@{call}!default@{default}}
+\subsubsection{\texorpdfstring{call()}{call()}}
+{\footnotesize\ttfamily def default.\+call (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Services functionality. 
+
+Exposes services. for example\+: \href{http://..../}{\tt http\+://..../}\mbox{[}app\mbox{]}/default/call/jsonrpc \mbox{\Hypertarget{namespacedefault_abcdcbacbec033ad1d6212d4feafc554a}\label{namespacedefault_abcdcbacbec033ad1d6212d4feafc554a}} 
+\index{default@{default}!download@{download}}
+\index{download@{download}!default@{default}}
+\subsubsection{\texorpdfstring{download()}{download()}}
+{\footnotesize\ttfamily def default.\+download (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Download functionality. 
+
+Allows downloading of uploaded files. \href{http://..../}{\tt http\+://..../}\mbox{[}app\mbox{]}/default/download/\mbox{[}filename\mbox{]} \mbox{\Hypertarget{namespacedefault_a123594d2c8890b62c80379e191485e3a}\label{namespacedefault_a123594d2c8890b62c80379e191485e3a}} 
+\index{default@{default}!index@{index}}
+\index{index@{index}!default@{default}}
+\subsubsection{\texorpdfstring{index()}{index()}}
+{\footnotesize\ttfamily def default.\+index (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Default view. 
+
+This is the default view, but was replaced by \hyperlink{namespacedefault_ae42db310ea72fd73d154e75b4d3d46f5}{main()} to maintain a name-\/oriented convention. \mbox{\Hypertarget{namespacedefault_ae42db310ea72fd73d154e75b4d3d46f5}\label{namespacedefault_ae42db310ea72fd73d154e75b4d3d46f5}} 
+\index{default@{default}!main@{main}}
+\index{main@{main}!default@{default}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily def default.\+main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Main view. 
+
+This view contains the feed of the first camera and a carousel with the stream of the rest of cameras. For security, it\textquotesingle{}s required that the user is logged in to view the page. \mbox{\Hypertarget{namespacedefault_a7cdc6aef159950a3288288d454a745b5}\label{namespacedefault_a7cdc6aef159950a3288288d454a745b5}} 
+\index{default@{default}!multi@{multi}}
+\index{multi@{multi}!default@{default}}
+\subsubsection{\texorpdfstring{multi()}{multi()}}
+{\footnotesize\ttfamily def default.\+multi (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Multiple cameras/grid view. 
+
+This view contains a grid of the registered cameras and allows to view all of them at the same time. For security, it\textquotesingle{}s required that the user is logged in to view the page. \mbox{\Hypertarget{namespacedefault_a0c38fd1bc3457394fdda416d7a956135}\label{namespacedefault_a0c38fd1bc3457394fdda416d7a956135}} 
+\index{default@{default}!user@{user}}
+\index{user@{user}!default@{default}}
+\subsubsection{\texorpdfstring{user()}{user()}}
+{\footnotesize\ttfamily def default.\+user (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+User functionality. 
+
+Exposes\+:
+
+\href{http://..../}{\tt http\+://..../}\mbox{[}app\mbox{]}/default/user/login
+
+\href{http://..../}{\tt http\+://..../}\mbox{[}app\mbox{]}/default/user/logout
+
+\href{http://..../}{\tt http\+://..../}\mbox{[}app\mbox{]}/default/user/register
+
+\href{http://..../}{\tt http\+://..../}\mbox{[}app\mbox{]}/default/user/profile
+
+\href{http://..../}{\tt http\+://..../}\mbox{[}app\mbox{]}/default/user/retrieve\+\_\+password
+
+\href{http://..../}{\tt http\+://..../}\mbox{[}app\mbox{]}/default/user/change\+\_\+password
+
+\href{http://..../}{\tt http\+://..../}\mbox{[}app\mbox{]}/default/user/bulk\+\_\+register \mbox{\Hypertarget{namespacedefault_a2bed257028509c3e94a4db8fdada8d1e}\label{namespacedefault_a2bed257028509c3e94a4db8fdada8d1e}} 
+\index{default@{default}!view@{view}}
+\index{view@{view}!default@{default}}
+\subsubsection{\texorpdfstring{view()}{view()}}
+{\footnotesize\ttfamily def default.\+view (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Videos view. 
+
+This view allows the search and view of stored videos related to detected events. For security, it\textquotesingle{}s required that the user is logged in to view the page. 

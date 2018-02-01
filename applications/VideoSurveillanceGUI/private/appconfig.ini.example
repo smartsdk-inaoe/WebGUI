@@ -1,0 +1,23 @@
+; App configuration
+
+; db configuration
+[db]
+uri       = mysql://username:password@server_ip:3306/smartsdksecurity 
+migrate   = True
+pool_size = 1
+
+; smtp address and credentials
+[smtp]
+server = smtp.gmail.com:587
+sender = you@gmail.com
+login  = username:password
+
+
+; form styling
+[forms]
+formstyle = bootstrap3_inline
+separator = 
+
+; auth server
+[auth]
+uri = http://ip:port

@@ -1,0 +1,56 @@
+{{extend 'kurentolayout.html'}}
+<script src="{{=URL('static','js/multi.js')}}"></script>
+{{block header}}
+{{end}}
+{{for c in range(1,10):}}
+    <div id="cam{{=c}}" style="padding:5px;width:33%;height:460px;display:inline-block;" onclick="window.location='{{=URL(f='main',args=c)}}'">
+        <h4 style="margin-bottom:5px;"></h4>
+        <video id="video{{=c}}" autoplay style="width:100%;" poster="{{=URL('static','images/webrtc.png')}}"></video>
+    </div>
+{{pass}}
+<script>
+{{cameras=db().select(db.camera.ALL)}}
+{{ncam=len(cameras)+1}}
+{{for c in range(1,ncam):}}
+    var c{{=c}};
+{{pass}}
+
+	window.onload = function() {
+    {{for cid in range(1,10):}}
+        {{if cid<len(cameras)+1:}}
+        {{c=cameras[cid-1]}}
+        c{{=cid}} = new camera('{{=c.name}}','{{=c.c_zone}}','video{{=cid}}','{{=cid}}')
+        document.getElementById('cam{{=cid}}').childNodes[1].innerHTML=c{{=cid}}.name;
+        {{else:}}
+        document.getElementById('cam{{=cid}}').childNodes[1].innerHTML="Camera {{=cid}} (Not connected)";
+        {{pass}}
+    {{pass}}
+	}
+
+	window.onbeforeunload = function() {
+    {{for c in range(1,ncam):}}
+		c{{=c}}.close();
+    {{pass}}
+	}
+
+    function connect() {
+    {{for c in range(1,ncam):}}
+	getStream(c{{=c}});
+    {{pass}}
+    }
+
+    function getStream(cam){
+        if(!cam.stream){
+            if(document.getElementById(cam.id).src!="")
+                stop(cam);
+            start(cam);
+            setTimeout(function(){getStream(cam)}, 5000);
+        }
+    }
+
+    setTimeout(connect, 1000);
+    //setTimeout(connect1, 1000);
+    //setTimeout(connect2, 1500);
+    //setTimeout(connect3, 2000);
+    //setTimeout(connect4, 2500);
+</script>

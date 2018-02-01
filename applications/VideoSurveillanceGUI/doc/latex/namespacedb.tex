@@ -1,0 +1,203 @@
+\hypertarget{namespacedb}{}\section{db Namespace Reference}
+\label{namespacedb}\index{db@{db}}
+
+
+Documentation for the data model.  
+
+
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{namespacedb_a33a87b881032e95df300a5a29215a486}{myconf} = App\+Config(reload=True)
+\item 
+\hyperlink{namespacedb_aed82679f33f702c99769be3e2586c03b}{db} = D\+AL(myconf.\+take(\textquotesingle{}db.\+uri\textquotesingle{}), pool\+\_\+size=myconf.\+take(\textquotesingle{}db.\+pool\+\_\+size\textquotesingle{}, cast=int), check\+\_\+reserved=\mbox{[}\textquotesingle{}all\textquotesingle{}\mbox{]})
+\begin{DoxyCompactList}\small\item\em Database connection. \end{DoxyCompactList}\item 
+\hyperlink{namespacedb_a0df56b5899dd931e8a9ed1fadf891ad1}{request}
+\item 
+\hyperlink{namespacedb_aeaa08bcae1a7c3c251e233d65ec72775}{response}
+\item 
+\hyperlink{namespacedb_ac1917cb3a4b16c7ac25158e93e51c52e}{generic\+\_\+patterns}
+\begin{DoxyCompactList}\small\item\em Generic patterns. \end{DoxyCompactList}\item 
+\hyperlink{namespacedb_ab68a30ce13011c7ceb6091ce5557ae1b}{formstyle}
+\begin{DoxyCompactList}\small\item\em Form style. \end{DoxyCompactList}\item 
+\hyperlink{namespacedb_a638d59d03b2f6ef1306f0651967b2d6b}{form\+\_\+label\+\_\+separator}
+\item 
+\hyperlink{namespacedb_a711411a4b59aaa146400d3a3a950d6f8}{auth} = Auth(\hyperlink{namespacedb_aed82679f33f702c99769be3e2586c03b}{db})
+\begin{DoxyCompactList}\small\item\em Initial configuration for. \end{DoxyCompactList}\item 
+\hyperlink{namespacedb_a60ddb7c313ec8a2276261b95e67ca070}{service} = Service()
+\begin{DoxyCompactList}\small\item\em Initial configuration for. \end{DoxyCompactList}\item 
+\hyperlink{namespacedb_ac705c267ea1320a8ff7a148e19fc1bf7}{plugins} = Plugin\+Manager()
+\item 
+\hyperlink{namespacedb_a470a73a6c9e7b643e5c6a9ba1b90755e}{username}
+\begin{DoxyCompactList}\small\item\em Authentication tables. \end{DoxyCompactList}\item 
+\hyperlink{namespacedb_aa87a451fde49f3d7dcb13435106b4335}{False}
+\item 
+\hyperlink{namespacedb_ac3b13438d27630fea8f9cbb643fd59f0}{signature}
+\item 
+\hyperlink{namespacedb_a39b72c0590643b096fd9f1429761100e}{mail} = auth.\+settings.\+mailer
+\begin{DoxyCompactList}\small\item\em Email configuration. \end{DoxyCompactList}\item 
+\hyperlink{namespacedb_a83850ad9c01b1355d91e442407781570}{server}
+\item 
+\hyperlink{namespacedb_a0389358465df21506bd70f938441160f}{sender}
+\item 
+\hyperlink{namespacedb_a1b7fdd513c47aa3ec333ec122eaa392f}{login}
+\item 
+\hyperlink{namespacedb_af315823f11d44ccb217606f97edea193}{reset\+\_\+password\+\_\+requires\+\_\+verification}
+\begin{DoxyCompactList}\small\item\em Auth policy. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Documentation for the data model. 
+
+This file contains the connection to the database and the definition of its tables. Also, it allows to configure the user authentication and email settings
+
+H\+T\+T\+PS redirection
+
+If S\+S\+L/\+H\+T\+T\+PS is properly configured and you want all H\+T\+TP requests to be redirected to H\+T\+T\+PS, uncomment the line below\+: request.\+requires\+\_\+https() 
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{namespacedb_a711411a4b59aaa146400d3a3a950d6f8}\label{namespacedb_a711411a4b59aaa146400d3a3a950d6f8}} 
+\index{db@{db}!auth@{auth}}
+\index{auth@{auth}!db@{db}}
+\subsubsection{\texorpdfstring{auth}{auth}}
+{\footnotesize\ttfamily db.\+auth = Auth(\hyperlink{namespacedb_aed82679f33f702c99769be3e2586c03b}{db})}
+
+
+
+Initial configuration for. 
+
+authentication (registration, login, logout, ... )
+
+authorization (role based authorization) \mbox{\Hypertarget{namespacedb_aed82679f33f702c99769be3e2586c03b}\label{namespacedb_aed82679f33f702c99769be3e2586c03b}} 
+\index{db@{db}!db@{db}}
+\index{db@{db}!db@{db}}
+\subsubsection{\texorpdfstring{db}{db}}
+{\footnotesize\ttfamily db.\+db = D\+AL(myconf.\+take(\textquotesingle{}db.\+uri\textquotesingle{}), pool\+\_\+size=myconf.\+take(\textquotesingle{}db.\+pool\+\_\+size\textquotesingle{}, cast=int), check\+\_\+reserved=\mbox{[}\textquotesingle{}all\textquotesingle{}\mbox{]})}
+
+
+
+Database connection. 
+
+if N\+OT running on Google App Engine use S\+Q\+Lite or other DB \mbox{\Hypertarget{namespacedb_aa87a451fde49f3d7dcb13435106b4335}\label{namespacedb_aa87a451fde49f3d7dcb13435106b4335}} 
+\index{db@{db}!False@{False}}
+\index{False@{False}!db@{db}}
+\subsubsection{\texorpdfstring{False}{False}}
+{\footnotesize\ttfamily db.\+False}
+
+\mbox{\Hypertarget{namespacedb_a638d59d03b2f6ef1306f0651967b2d6b}\label{namespacedb_a638d59d03b2f6ef1306f0651967b2d6b}} 
+\index{db@{db}!form\+\_\+label\+\_\+separator@{form\+\_\+label\+\_\+separator}}
+\index{form\+\_\+label\+\_\+separator@{form\+\_\+label\+\_\+separator}!db@{db}}
+\subsubsection{\texorpdfstring{form\+\_\+label\+\_\+separator}{form\_label\_separator}}
+{\footnotesize\ttfamily db.\+form\+\_\+label\+\_\+separator}
+
+\mbox{\Hypertarget{namespacedb_ab68a30ce13011c7ceb6091ce5557ae1b}\label{namespacedb_ab68a30ce13011c7ceb6091ce5557ae1b}} 
+\index{db@{db}!formstyle@{formstyle}}
+\index{formstyle@{formstyle}!db@{db}}
+\subsubsection{\texorpdfstring{formstyle}{formstyle}}
+{\footnotesize\ttfamily db.\+formstyle}
+
+
+
+Form style. 
+
+Choose a style for forms \textquotesingle{}bootstrap3\+\_\+stacked\textquotesingle{} or \textquotesingle{}bootstrap2\textquotesingle{} or other \mbox{\Hypertarget{namespacedb_ac1917cb3a4b16c7ac25158e93e51c52e}\label{namespacedb_ac1917cb3a4b16c7ac25158e93e51c52e}} 
+\index{db@{db}!generic\+\_\+patterns@{generic\+\_\+patterns}}
+\index{generic\+\_\+patterns@{generic\+\_\+patterns}!db@{db}}
+\subsubsection{\texorpdfstring{generic\+\_\+patterns}{generic\_patterns}}
+{\footnotesize\ttfamily db.\+generic\+\_\+patterns}
+
+
+
+Generic patterns. 
+
+By default give a view/generic.\+extension to all actions from localhost none otherwise. a pattern can be \textquotesingle{}controller/function.\+extension\textquotesingle{} \mbox{\Hypertarget{namespacedb_a1b7fdd513c47aa3ec333ec122eaa392f}\label{namespacedb_a1b7fdd513c47aa3ec333ec122eaa392f}} 
+\index{db@{db}!login@{login}}
+\index{login@{login}!db@{db}}
+\subsubsection{\texorpdfstring{login}{login}}
+{\footnotesize\ttfamily db.\+login}
+
+\mbox{\Hypertarget{namespacedb_a39b72c0590643b096fd9f1429761100e}\label{namespacedb_a39b72c0590643b096fd9f1429761100e}} 
+\index{db@{db}!mail@{mail}}
+\index{mail@{mail}!db@{db}}
+\subsubsection{\texorpdfstring{mail}{mail}}
+{\footnotesize\ttfamily db.\+mail = auth.\+settings.\+mailer}
+
+
+
+Email configuration. 
+
+Write to the log when the request is from localhost \mbox{\Hypertarget{namespacedb_a33a87b881032e95df300a5a29215a486}\label{namespacedb_a33a87b881032e95df300a5a29215a486}} 
+\index{db@{db}!myconf@{myconf}}
+\index{myconf@{myconf}!db@{db}}
+\subsubsection{\texorpdfstring{myconf}{myconf}}
+{\footnotesize\ttfamily db.\+myconf = App\+Config(reload=True)}
+
+\mbox{\Hypertarget{namespacedb_ac705c267ea1320a8ff7a148e19fc1bf7}\label{namespacedb_ac705c267ea1320a8ff7a148e19fc1bf7}} 
+\index{db@{db}!plugins@{plugins}}
+\index{plugins@{plugins}!db@{db}}
+\subsubsection{\texorpdfstring{plugins}{plugins}}
+{\footnotesize\ttfamily db.\+plugins = Plugin\+Manager()}
+
+\mbox{\Hypertarget{namespacedb_a0df56b5899dd931e8a9ed1fadf891ad1}\label{namespacedb_a0df56b5899dd931e8a9ed1fadf891ad1}} 
+\index{db@{db}!request@{request}}
+\index{request@{request}!db@{db}}
+\subsubsection{\texorpdfstring{request}{request}}
+{\footnotesize\ttfamily db.\+request}
+
+\mbox{\Hypertarget{namespacedb_af315823f11d44ccb217606f97edea193}\label{namespacedb_af315823f11d44ccb217606f97edea193}} 
+\index{db@{db}!reset\+\_\+password\+\_\+requires\+\_\+verification@{reset\+\_\+password\+\_\+requires\+\_\+verification}}
+\index{reset\+\_\+password\+\_\+requires\+\_\+verification@{reset\+\_\+password\+\_\+requires\+\_\+verification}!db@{db}}
+\subsubsection{\texorpdfstring{reset\+\_\+password\+\_\+requires\+\_\+verification}{reset\_password\_requires\_verification}}
+{\footnotesize\ttfamily db.\+reset\+\_\+password\+\_\+requires\+\_\+verification}
+
+
+
+Auth policy. 
+
+Disable registration of new users Email verification
+
+Verify by email if the user is trying to reset his/her password \mbox{\Hypertarget{namespacedb_aeaa08bcae1a7c3c251e233d65ec72775}\label{namespacedb_aeaa08bcae1a7c3c251e233d65ec72775}} 
+\index{db@{db}!response@{response}}
+\index{response@{response}!db@{db}}
+\subsubsection{\texorpdfstring{response}{response}}
+{\footnotesize\ttfamily db.\+response}
+
+\mbox{\Hypertarget{namespacedb_a0389358465df21506bd70f938441160f}\label{namespacedb_a0389358465df21506bd70f938441160f}} 
+\index{db@{db}!sender@{sender}}
+\index{sender@{sender}!db@{db}}
+\subsubsection{\texorpdfstring{sender}{sender}}
+{\footnotesize\ttfamily db.\+sender}
+
+\mbox{\Hypertarget{namespacedb_a83850ad9c01b1355d91e442407781570}\label{namespacedb_a83850ad9c01b1355d91e442407781570}} 
+\index{db@{db}!server@{server}}
+\index{server@{server}!db@{db}}
+\subsubsection{\texorpdfstring{server}{server}}
+{\footnotesize\ttfamily db.\+server}
+
+\mbox{\Hypertarget{namespacedb_a60ddb7c313ec8a2276261b95e67ca070}\label{namespacedb_a60ddb7c313ec8a2276261b95e67ca070}} 
+\index{db@{db}!service@{service}}
+\index{service@{service}!db@{db}}
+\subsubsection{\texorpdfstring{service}{service}}
+{\footnotesize\ttfamily db.\+service = Service()}
+
+
+
+Initial configuration for. 
+
+services (xml, csv, json, xmlrpc, jsonrpc, amf, rss) \mbox{\Hypertarget{namespacedb_ac3b13438d27630fea8f9cbb643fd59f0}\label{namespacedb_ac3b13438d27630fea8f9cbb643fd59f0}} 
+\index{db@{db}!signature@{signature}}
+\index{signature@{signature}!db@{db}}
+\subsubsection{\texorpdfstring{signature}{signature}}
+{\footnotesize\ttfamily db.\+signature}
+
+\mbox{\Hypertarget{namespacedb_a470a73a6c9e7b643e5c6a9ba1b90755e}\label{namespacedb_a470a73a6c9e7b643e5c6a9ba1b90755e}} 
+\index{db@{db}!username@{username}}
+\index{username@{username}!db@{db}}
+\subsubsection{\texorpdfstring{username}{username}}
+{\footnotesize\ttfamily db.\+username}
+
+
+
+Authentication tables. 
+
+Create all tables needed by auth if not custom tables 

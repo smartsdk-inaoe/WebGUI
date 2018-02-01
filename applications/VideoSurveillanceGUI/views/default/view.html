@@ -1,0 +1,125 @@
+{{extend 'kurentolayout.html'}}
+<script src="{{=URL('static','js/index.js')}}"></script>
+{{block header}}
+{{end}}
+<div id="Detections" class="col-sm-6" style="height:800px">
+    <h2>Search by</h2>
+    <div class="col-sm-10" style="border-style:solid;border-width:1px;border-color:#bbb;padding:20px">
+        <div class="col-sm-12">
+            <input type="radio" name="searchby" value="filter" onclick="toggleFilter()" checked>
+            <big>Filters</big>
+            &nbsp;&nbsp;
+            <input type="radio" name="searchby" value="face" onclick="toggleFace()">
+            <big>Face</big>
+        </div>
+        <span class="col-sm-12"><br/></span>
+        <div id="filterdiv">
+            <div class="col-sm-6">
+                {{=form.custom.widget.type}}
+            </div>
+            <div class="col-sm-6">
+                {{=form.custom.widget.camera}}
+            </div>
+            <span class="col-sm-12"><br/></span>
+            <div class="col-sm-4">
+                {{=form.custom.widget.start}}
+            </div>
+            <div class="col-sm-4">
+                {{=form.custom.widget.end}}
+            </div>
+            <div class="col-sm-2">
+                <input class="btn" type="submit" value="Clear" onclick="$('#filter_type').val(0);$('#filter_camera').val(0);$('#filter_start').val('');$('#filter_end').val('');">
+            </div>
+            <div class="col-sm-2">
+                <input id="filter" class="btn" type="submit" value="Search" onclick="ajax('{{=URL(f='getVideos')}}', ['type','camera','start','end'], 'Results')">
+            </div>
+        </div>
+        <div id="facediv">
+            {{=form2.custom.begin}}
+            <div class="col-sm-8" style="padding-top:12px;">
+                {{=form2.custom.widget.face}}
+            </div>
+            <div class="col-sm-2">
+                {{=form2.custom.submit}}
+            </div>
+            {{=form2.custom.end}}
+        </div>
+    </div>
+    <span class="col-sm-12"><br/></span>
+    <div class="col-sm-10" style="border-style:solid;border-width:1px;border-color:#bbb;padding-top:20px;">
+        <ul id="Results" style="height:360px;overflow-y:auto;">
+            {{=files}}
+        </ul>
+        <br/>
+        <!--nav aria-label="...">
+          <ul class="pagination">
+            <li class="disabled"><a href="#">&lt;</a></li>
+            <li class="active"><a href="#">1</a></li>
+            <li class="disabled"><a href="#">&gt;</a></li>
+          </ul>
+        </nav-->
+    </div>
+    <span class="col-sm-12"><br/></span>
+    <div class="col-sm-12">
+        <input class="btn" type="submit" value="Export CSV">
+        <input class="btn" type="submit" value="Export PDF">
+        <input class="btn" type="submit" value="Export JSON">
+        <input class="btn" type="submit" value="Export XML">
+    </div>
+</div>
+<div class="col-sm-5">
+    <h4 id="videotitle">Video</h4>
+    <canvas id="mycanvas" width="100%" height="75%" style="position:absolute">Your browser does not support the HTML5 canvas tag.</canvas>
+    <video id="video" autoplay width="100%" height="75%" poster="{{=URL('static','images/webrtc.png')}}"></video>
+    <input type="text" id="videourl"
+                       value="http://192.168.47.11/mjpg/video.mjpg"
+                       hidden>
+    <input type="range" id="seekBar" min="0" max="100" value="0" onchange="doSeek(this.value)" /> 
+    <span class="col-sm-12"><br/></span>
+    <div class="col-md-12">
+        <a id="start" href="#" class="btn btn-success">
+            <span class="glyphicon glyphicon-play"></span> Start
+        </a>
+        <a id="pause" href="#" class="btn btn-primary">
+            <span id="pause-icon" class="glyphicon glyphicon-pause"></span>
+            <span id="pause-text"> Pause </span>
+        </a>
+        <a id="stop" href="#" class="btn btn-danger">
+            <span class="glyphicon glyphicon-stop"></span> Stop
+        </a>
+    </div>
+    <span class="col-sm-12"><br/></span>
+    <h4>Description</h4>
+    <p><b>Duration: <span id="durationtag">click Start to obtain data</span></b></p>
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+    </p>
+<script>
+    var retry_id = null;
+    function toggleFilter() {
+        //$("#filterdiv .form-control").prop("disabled", false);
+        //$("#facediv input").prop("disabled", true);
+        $("#facediv").attr("style", "display:none");
+        $("#filterdiv").attr("style", "display:block");
+    }
+    function toggleFace() {
+        //$("#facediv input").prop("disabled", false);
+        //$("#filterdiv .form-control").prop("disabled", true);
+        $("#filterdiv").attr("style", "display:none");
+        $("#facediv").attr("style", "display:block");
+    }
+	function showVideoData(parsedMessage) {
+		var c=document.getElementById("mycanvas");
+        var ctx=c.getContext("2d");
+        ctx.lineWidth="4";
+		ctx.strokeStyle="green";
+		ctx.rect(60,80,100,150);
+		ctx.stroke();
+	}
+    function getStream(){
+        if(document.getElementById("video").src!="")
+            stop();
+        start();
+        retry_id=setTimeout(function(){getStream()}, 5000);
+    }
+</script>
