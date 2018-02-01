@@ -57,17 +57,20 @@ response.google_analytics_id = None
 #
 #  This is the main application menu add/remove items as required
 response.menu = [
-    (T('Main'), False, URL('default', 'main'), []),
-    (T('Mutiple cameras'), False, URL('default', 'multi'), []),
-    (T('Search'), False, '#', [
-            (T('Videos'), False, URL('default', 'view'), []),
-            (T('On map'), False, URL('default', 'campusZonesMap'), []),
-        ]),
-    (T('Management'), False, '#', [
-            (T('Cameras'), False, URL('default', 'cameras'), []),
-            (T('Markers'), False, URL('default', 'filters'), []),
-            (T('Users'), False, URL('default', 'users'), [])
-        ])
+	(T('Main'), False, URL('default', 'main'), []),
+	(T('Mutiple cameras'), False, '#', [
+			(T('Grid'), False, URL('default', 'multi'), []),
+			(T('Map'), False, URL('default', 'streamMap'), [])
+		]),
+	(T('Search'), False, '#', [
+			(T('Videos'), False, URL('default', 'view'), []),
+			(T('On map'), False, URL('default', 'campusZonesMap'), [])
+		]),
+	(T('Management'), False, '#', [
+			(T('Cameras'), False, URL('default', 'cameras'), []),
+			(T('Markers'), False, URL('default', 'filters'), []),
+			(T('Users'), False, URL('default', 'users'), [])
+		])
 ]
 
 if "auth" in locals(): auth.wikimenu()

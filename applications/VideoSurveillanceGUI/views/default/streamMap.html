@@ -1,0 +1,104 @@
+{{extend 'kurentolayout.html'}}
+<script src="{{=URL('static','js/stream.js')}}"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+   integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+   crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
+   integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+   crossorigin=""></script>
+<style>
+#mapid { height: 480px; }
+</style>
+<div class="col-sm-3">
+    <h3>Search filters</h3>
+    <div class="form-group">{{=form.custom.widget.device}}</div>
+    <div class="form-group">{{=form.custom.widget.username}}</div>
+    <div class="form-group">{{=form.custom.widget.user}}</div>
+    <a id="update" href="#" class="btn btn-success" onclick="updateMarkers()">
+        Search
+    </a>
+</div>
+<div class="col-sm-9">
+    <h3>Map</h3>
+    <div class="container col-sm-12 justify-content-center" id="mapid"></div>
+</div>
+<script>
+var mymap = L.map('mapid').setView([19.03339, -98.31622],19);
+L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'OpenStreetMap',
+    maxZoom: 19
+}).addTo(mymap);
+
+var markers = new L.FeatureGroup();
+
+//var marker1 = L.marker();
+
+function updateMarkers() {
+    //Camera 1
+	var c1 = new camera('Hallway','CC Building','cam1','1');
+    var marker1 = L.marker([19.03353, -98.31621]);
+    marker1.bindPopup('<b>Hallway - CC Building</b><br>'+
+					  '<video id="cam1" autoplay width="213" height="160" poster="{{=URL("static","images/webrtc.png")}}"></video>',
+					  { closeOnClick: false });
+	marker1.on('click', function(){open(c1);});
+	marker1.on('popupclose', function() {stop(c1);});
+    markers.addLayer(L.polygon([
+            [19.03353, -98.31621],
+            [19.03366, -98.31615],
+            [19.03363, -98.31610]
+        ]));
+	markers.addLayer(marker1);
+    //Camera 2
+	var c2 = new camera('Parking Entrance','Outside','cam2','3');
+    var marker2 = L.marker([19.03171, -98.31600]);
+    marker2.bindPopup('<b>Parking Entrance - Outside</b><br>'+
+					  '<video id="cam2" autoplay width="213" height="160" poster="{{=URL("static","images/webrtc.png")}}"></video>',
+					  { closeOnClick: false });
+	marker2.on('click', function(){open(c2);});
+	marker2.on('popupclose', function() {stop(c2);});
+    markers.addLayer(L.polygon([
+            [19.03171, -98.31600],
+            [19.03156, -98.31616],
+            [19.03167, -98.31622]
+        ]));
+	markers.addLayer(marker2);
+    //Camera 3
+	var c3 = new camera('Main Entrance','Entrance','cam3','2');
+    var marker3 = L.marker([19.03139, -98.31694]);
+    marker3.bindPopup('<b>Main Entrance - Entrance</b><br>'+
+					  '<video id="cam3" autoplay width="213" height="160" poster="{{=URL("static","images/webrtc.png")}}"></video>',
+					  { closeOnClick: false });
+	marker3.on('click', function(){open(c3);});
+	marker3.on('popupclose', function() {stop(c3);});
+    markers.addLayer(L.polygon([
+            [19.03139, -98.31694],
+            [19.03143, -98.31707],
+            [19.03150, -98.31697]
+        ]));
+	markers.addLayer(marker3);
+    //Camera 4
+	var c4 = new camera('Parking Lot','Outside','cam4','4');
+    var marker4 = L.marker([19.03077, -98.31637]);
+    marker4.bindPopup('<b>Parking Lot - Outside</b><br>'+
+					  '<video id="cam4" autoplay width="213" height="160" poster="{{=URL("static","images/webrtc.png")}}"></video>',
+					  { closeOnClick: false });
+	marker4.on('click', function(){open(c4);});
+	marker4.on('popupclose', function() {stop(c4);});
+    markers.addLayer(L.polygon([
+            [19.03077, -98.31637],
+            [19.03086, -98.31693],
+            [19.03113, -98.31677]
+        ]));
+	markers.addLayer(marker4);
+    mymap.flyTo([19.0322,-98.31605],17);
+}
+
+function getClickCoordinates(e) {
+    alert("You clicked the map at " + e.latlng);
+}
+
+//mymap.on('click', getClickCoordinates);
+//marker1.on('click', marker1.getPopup().openPopup());
+mymap.addLayer(markers);
+
+</script>

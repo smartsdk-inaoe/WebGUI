@@ -104,19 +104,12 @@ function start() {
 	setState(I_AM_STARTING);
 	showSpinner(video);
 
-	var mode = $('input[name="mode"]:checked').val();
 	//console.log('Creating WebRtcPeer in ' + mode + ' mode and generating local sdp offer ...');
 
 	// Video and audio by default
 	var userMediaConstraints = {
 		audio : false,
 		video : true
-	}
-
-	if (mode == 'video-only') {
-		userMediaConstraints.audio = false;
-	} else if (mode == 'audio-only') {
-		userMediaConstraints.video = false;
 	}
 
 	var options = {

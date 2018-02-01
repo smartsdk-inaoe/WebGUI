@@ -285,6 +285,36 @@ def campusZonesMap():
 	form.element(_id='filter_user')['_placeholder']='ID User'
 	return dict(form=form)
 	
+def popupHoverMap():
+    form=SQLFORM.factory(Field('device'),
+                    Field('username'),
+                    Field('user'),
+                    table_name='filter')
+    form.element(_id='filter_device')['_placeholder']='ID Device'
+    form.element(_id='filter_username')['_placeholder']='Username'
+    form.element(_id='filter_user')['_placeholder']='ID User'
+    return dict(form=form)
+	
+def streamMap():
+    form=SQLFORM.factory(Field('device'),
+                    Field('username'),
+                    Field('user'),
+                    table_name='filter')
+    form.element(_id='filter_device')['_placeholder']='ID Device'
+    form.element(_id='filter_username')['_placeholder']='Username'
+    form.element(_id='filter_user')['_placeholder']='ID User'
+    return dict(form=form)
+	
+def eventMap():
+    form=SQLFORM.factory(Field('device'),
+                    Field('username'),
+                    Field('user'),
+                    table_name='filter')
+    form.element(_id='filter_device')['_placeholder']='ID Device'
+    form.element(_id='filter_username')['_placeholder']='Username'
+    form.element(_id='filter_user')['_placeholder']='ID User'
+    return dict(form=form)
+	
 @auth.requires_login()
 def dashboard():
 	"""Dashboard view
