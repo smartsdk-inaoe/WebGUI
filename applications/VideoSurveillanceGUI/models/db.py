@@ -142,7 +142,7 @@ db.define_table('alerts',
         Field('eventDateTime','string'))
 
 db.define_table('alert',
-	Field('idAlert','string'),
+	Field('idAlert','id'),
 	Field('type','string'),
 	Field('category','string'),
 	Field('subCategory','string'),

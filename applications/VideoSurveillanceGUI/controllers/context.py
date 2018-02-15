@@ -148,8 +148,8 @@ def getNotifications():
 	if request.args(0):
 		lastId = request.args(0)
 	events = ''
-	for row in db(db.alerts.id>lastId).select():
-		events += ';'+row.eventObserved+','+row.refDevice+','+row.eventAddress+','+row.eventDateTime
-		lastId = row.id
+	for row in db(db.alert.idAlert>lastId).select():
+		events += ';'+row.description+','+row.alertSource+','+row.address+','+row.dateObserved.isoformat()
+		lastId = row.idAlert
 	events = str(lastId) + events
 	return events
