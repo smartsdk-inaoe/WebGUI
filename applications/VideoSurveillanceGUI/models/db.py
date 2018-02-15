@@ -140,6 +140,21 @@ db.define_table('alerts',
         Field('eventLocation','string'),
         Field('eventObserved','string'),
         Field('eventDateTime','string'))
+
+db.define_table('alert',
+	Field('idAlert','string'),
+	Field('type','string'),
+	Field('category','string'),
+	Field('subCategory','string'),
+	Field('location','string'),
+	Field('address','string'),
+	Field('dateObserved','datetime'),
+	Field('validFrom','datetime'),
+	Field('validTo','datetime'),
+	Field('description','string'),
+	Field('alertSource','string'),
+	Field('data','string'),
+	Field('severity','string'))
 ## after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)
 

@@ -60,7 +60,7 @@ response.menu = [
 	(T('Main'), False, URL('default', 'main'), []),
 	(T('Mutiple cameras'), False, '#', [
 			(T('Grid'), False, URL('default', 'multi'), []),
-			(T('Map'), False, URL('default', 'streamMap'), [])
+			(T('Map'), False, URL('default', 'onlineMap'), [])
 		]),
 	(T('Search'), False, '#', [
 			(T('Videos'), False, URL('default', 'view'), []),

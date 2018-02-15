@@ -8,19 +8,8 @@
 <style>
 #mapid { height: 480px; }
 </style>
-<div class="col-sm-3">
-    <h3>Search filters</h3>
-    <div class="form-group">{{=form.custom.widget.device}}</div>
-    <div class="form-group">{{=form.custom.widget.username}}</div>
-    <div class="form-group">{{=form.custom.widget.user}}</div>
-    <a id="update" href="#" class="btn btn-success" onclick="updateMarkers()">
-        Search
-    </a>
-</div>
-<div class="col-sm-9">
-    <h3>Map</h3>
-    <div class="container col-sm-12 justify-content-center" id="mapid"></div>
-</div>
+<h3>Map</h3>
+<div class="container col-sm-12 justify-content-center" id="mapid"></div>
 <script>
 var MyCustomMarker = L.Marker.extend({
      bindPopup: function(htmlContent, options) {
@@ -142,7 +131,7 @@ function getClickCoordinates(e) {
     alert("You clicked the map at " + e.latlng);
 }
 
-//mymap.on('click', getClickCoordinates);
+mymap.on('click', updateMarkers);
 //marker1.on('click', marker1.getPopup().openPopup());
 //marker2.on('click', marker2.getPopup().openPopup());
 //marker3.on('click', marker3.getPopup().openPopup());

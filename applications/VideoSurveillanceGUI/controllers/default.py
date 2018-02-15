@@ -227,7 +227,7 @@ def users():
 	
 def accept():
 	row = db.authUser[request.args(0)]
-	from encription import crypt
+	from encryption import crypt
 	row.password=crypt('decrypt', row.password)
 
 	import requests
@@ -314,6 +314,9 @@ def eventMap():
     form.element(_id='filter_username')['_placeholder']='Username'
     form.element(_id='filter_user')['_placeholder']='ID User'
     return dict(form=form)
+	
+def onlineMap():
+	return dict()
 	
 @auth.requires_login()
 def dashboard():

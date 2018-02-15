@@ -1,0 +1,139 @@
+{{extend 'kurentolayout.html'}}
+<script src="{{=URL('static','js/stream.js')}}"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+   integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+   crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
+   integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+   crossorigin=""></script>
+<style>
+#mapid { height: 480px; }
+</style>
+<a id="update" href="#" class="btn btn-success" onclick="getMarkers()">
+	Simulate call
+</a>
+<h3>Map</h3>
+<div class="container col-sm-12 justify-content-center" id="mapid"></div>
+<script>
+var MyCustomMarker = L.Marker.extend({
+     bindPopup: function(htmlContent, options) {
+		if (options && options.cam) {
+			// call the super method
+			L.Marker.prototype.bindPopup.apply(this, [htmlContent, options]);
+			// bind the click event
+			this.on("click", function(e) {
+				if(this._currentPopup != 'stream') {
+					// update content
+					this.setPopupContent('<b>'+options.cam.name+' - '+options.cam.zone+'</b><br><video id="'+options.cam.id+'" autoplay width="213" height="160" poster="{{=URL("static","images/webrtc.png")}}"></video>');
+					// show the popup
+					this.openPopup();
+					// get the stream
+					open(options.cam);
+					// set the current popup
+					this._currentPopup = 'stream';
+				}
+			}, this);
+			// bind to right click
+			this.on("contextmenu", function(e) {
+				if(this._currentPopup != 'context') {
+					if(this._currentPopup == 'stream')
+						stop(options.cam);
+					this.setPopupContent(htmlContent);
+					// show the popup
+					this.openPopup();
+					// set the current popup
+					this._currentPopup = 'context';
+				}
+			}, this);
+			this.on("popupclose", function(e) {
+				this._currentPopup = '';
+				stop(options.cam);
+			}, this);
+		}
+	},
+	_currentPopup: ''
+});
+
+var mymap = L.map('mapid').setView([19.03339, -98.31622],19);
+L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'OpenStreetMap',
+    maxZoom: 19
+}).addTo(mymap);
+
+var markers = new L.FeatureGroup();
+
+//var marker1 = L.marker();
+//var marker2 = L.marker();
+//var marker3 = L.marker();
+//var marker4 = L.marker();
+
+function getMarkers() {
+    //Camera 1
+	var c1 = new camera('Hallway','CC Building','cam1','1');
+    var marker1 = new MyCustomMarker([19.03353, -98.31621]);
+    marker1.bindPopup('<b>'+c1.name+' - '+c1.zone+'</b>', { cam: c1, closeOnClick: false });
+    markers.addLayer(L.polygon([
+            [19.03353, -98.31621],
+            [19.03366, -98.31615],
+            [19.03363, -98.31610]
+        ]));
+	markers.addLayer(marker1);
+	setInterval(function(){updateMarker(marker1)},3000);
+    //Camera 2
+	var c2 = new camera('Parking Entrance','Outside','cam2','2');
+    var marker2 = new MyCustomMarker([19.03139, -98.31694]);
+    marker2.bindPopup('<b>'+c2.name+' - '+c2.zone+'</b>', { cam: c2, closeOnClick: false });
+    markers.addLayer(L.polygon([
+            [19.03139, -98.31694],
+            [19.03143, -98.31707],
+            [19.03150, -98.31697]
+        ]));
+	markers.addLayer(marker2);
+	setInterval(function(){updateMarker(marker2)},3000);
+    //Camera 3
+	var c3 = new camera('Main Entrance','Entrance','cam3','3');
+    var marker3 = new MyCustomMarker([19.03171, -98.31600]);
+    marker3.bindPopup('<b>'+c3.name+' - '+c3.zone+'</b>', { cam: c3, closeOnClick: false });
+    markers.addLayer(L.polygon([
+            [19.03171, -98.31600],
+            [19.03156, -98.31616],
+            [19.03167, -98.31622]
+        ]));
+	markers.addLayer(marker3);
+	setInterval(function(){updateMarker(marker3)},3000);
+    //Camera 4
+	var c4 = new camera('Parking Lot','Outside','cam4','4');
+    var marker4 = new MyCustomMarker([19.03077, -98.31637]);
+    marker4.bindPopup('<b>'+c4.name+' - '+c4.zone+'</b>', { cam: c4, closeOnClick: false });
+    markers.addLayer(L.polygon([
+            [19.03077, -98.31637],
+            [19.03086, -98.31693],
+            [19.03113, -98.31677]
+        ]));
+	markers.addLayer(marker4);
+	setInterval(function(){updateMarker(marker4)},3000);
+    mymap.flyTo([19.0322,-98.31605],17);
+}
+var contador=0;
+function updateMarker(marker) {
+	contador=contador+1;
+	var cam = marker.getPopup().options.cam;
+	if(marker._currentPopup == 'context')
+		marker.setPopupContent("<b>Camera name:</b> "+cam.name+" - "+cam.zone+"<br><b>Detections:</b> "+contador+"<br><b>Other info:</b> ###");
+}
+
+function getClickCoordinates(e) {
+    alert("You clicked the map at " + e.latlng);
+}
+function mapClick(e) {
+	markers.getLayers()[1].openPopup();
+}
+//mymap.on('click', mapClick);
+
+//mymap.on('click', getClickCoordinates);
+//marker1.on('click', marker1.getPopup().openPopup());
+//marker2.on('click', marker2.getPopup().openPopup());
+//marker3.on('click', marker3.getPopup().openPopup());
+//marker4.on('click', marker4.getPopup().openPopup());
+mymap.addLayer(markers);
+</script>

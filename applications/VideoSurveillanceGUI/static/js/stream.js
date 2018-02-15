@@ -55,7 +55,7 @@ function camera(cname,czone,cid,url) {
 
 function open(cam) {
 	if(cam.ws.readyState === cam.ws.OPEN){
-		console.log('Open');
+		//console.log('Open');
 		cam.ws.onmessage = function(message) {
 				var parsedMessage = JSON.parse(message.data);
 				//console.log('Received message('+cam.name+'):', parsedMessage);
@@ -133,16 +133,17 @@ function start(cam) {
 }
 
 function getStream(cam){
-	console.log('getStream:'+cam.id);
+	//console.log('getStream:'+cam.id);
     if(!cam.stream){
         if(cam.container && cam.container.src!=""){
             stop(cam);
         }
-        setTimeout(function(){start(cam)}, 2000);
+        cam.retryID = setTimeout(function(){start(cam)}, 2000);
     }
 }
 
 function stop(cam) {
+	//console.log('stop');
     if (cam.webRtcPeer) {
         cam.webRtcPeer.dispose();
         cam.webRtcPeer = null;

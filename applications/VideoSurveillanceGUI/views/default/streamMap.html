@@ -9,19 +9,8 @@
 <style>
 #mapid { height: 480px; }
 </style>
-<div class="col-sm-3">
-    <h3>Search filters</h3>
-    <div class="form-group">{{=form.custom.widget.device}}</div>
-    <div class="form-group">{{=form.custom.widget.username}}</div>
-    <div class="form-group">{{=form.custom.widget.user}}</div>
-    <a id="update" href="#" class="btn btn-success" onclick="updateMarkers()">
-        Search
-    </a>
-</div>
-<div class="col-sm-9">
-    <h3>Map</h3>
-    <div class="container col-sm-12 justify-content-center" id="mapid"></div>
-</div>
+<h3>Map</h3>
+<div class="container col-sm-12 justify-content-center" id="mapid"></div>
 <script>
 var mymap = L.map('mapid').setView([19.03339, -98.31622],19);
 L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -49,31 +38,31 @@ function updateMarkers() {
         ]));
 	markers.addLayer(marker1);
     //Camera 2
-	var c2 = new camera('Parking Entrance','Outside','cam2','3');
-    var marker2 = L.marker([19.03171, -98.31600]);
+	var c2 = new camera('Parking Entrance','Outside','cam2','2');
+    var marker2 = L.marker([19.03139, -98.31694]);
     marker2.bindPopup('<b>Parking Entrance - Outside</b><br>'+
 					  '<video id="cam2" autoplay width="213" height="160" poster="{{=URL("static","images/webrtc.png")}}"></video>',
 					  { closeOnClick: false });
 	marker2.on('click', function(){open(c2);});
 	marker2.on('popupclose', function() {stop(c2);});
     markers.addLayer(L.polygon([
-            [19.03171, -98.31600],
-            [19.03156, -98.31616],
-            [19.03167, -98.31622]
+            [19.03139, -98.31694],
+            [19.03143, -98.31707],
+            [19.03150, -98.31697]
         ]));
 	markers.addLayer(marker2);
     //Camera 3
-	var c3 = new camera('Main Entrance','Entrance','cam3','2');
-    var marker3 = L.marker([19.03139, -98.31694]);
+	var c3 = new camera('Main Entrance','Entrance','cam3','3');
+    var marker3 = L.marker([19.03171, -98.31600]);
     marker3.bindPopup('<b>Main Entrance - Entrance</b><br>'+
 					  '<video id="cam3" autoplay width="213" height="160" poster="{{=URL("static","images/webrtc.png")}}"></video>',
 					  { closeOnClick: false });
 	marker3.on('click', function(){open(c3);});
 	marker3.on('popupclose', function() {stop(c3);});
     markers.addLayer(L.polygon([
-            [19.03139, -98.31694],
-            [19.03143, -98.31707],
-            [19.03150, -98.31697]
+            [19.03171, -98.31600],
+            [19.03156, -98.31616],
+            [19.03167, -98.31622]
         ]));
 	markers.addLayer(marker3);
     //Camera 4
@@ -97,7 +86,7 @@ function getClickCoordinates(e) {
     alert("You clicked the map at " + e.latlng);
 }
 
-//mymap.on('click', getClickCoordinates);
+mymap.on('click', updateMarkers);
 //marker1.on('click', marker1.getPopup().openPopup());
 mymap.addLayer(markers);
 
