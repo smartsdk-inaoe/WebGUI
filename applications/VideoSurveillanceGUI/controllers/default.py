@@ -276,14 +276,7 @@ def campusZonesMap():
 	
 	This view will allow the search and localization of users in the map.
 	"""
-	form=SQLFORM.factory(Field('device'),
-					Field('username'),
-					Field('user'),
-					table_name='filter')
-	form.element(_id='filter_device')['_placeholder']='ID Device'
-	form.element(_id='filter_username')['_placeholder']='Username'
-	form.element(_id='filter_user')['_placeholder']='ID User'
-	return dict(form=form)
+	return dict()
 	
 def popupHoverMap():
     form=SQLFORM.factory(Field('device'),

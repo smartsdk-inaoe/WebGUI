@@ -1,85 +1,99 @@
-{{extend 'kurentolayout.html'}}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
-   integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
-   crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
-   integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
-   crossorigin=""></script>
-<style>
-#mapid { height: 480px; }
-</style>
-<div class="col-sm-3">
-    <h3>Search filters</h3>
-    <div class="form-group">{{=form.custom.widget.device}}</div>
-    <div class="form-group">{{=form.custom.widget.username}}</div>
-    <div class="form-group">{{=form.custom.widget.user}}</div>
-    <a id="update" href="#" class="btn btn-success" onclick="updateMarkers()">
-        Search
-    </a>
+{{extend 'layout.html'}}
+{{block head}}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.13/leaflet.draw.js"></script>
+<script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+crossorigin="anonymous"></script>
+<link rel="stylesheet" href="{{=URL('static','css/estilosApp.css')}}"/>
+<link rel="stylesheet" href="{{=URL('static','css/leaflet.css')}}"/>
+<link rel="stylesheet" href="{{=URL('static','css/leafletDraw.css')}}"/>
+{{end}} 
+
+{{block page_js}}
+<script src="{{=URL('static','js/searchWhere2.js')}}"></script>
+<script src="{{=URL('static','js/searchWhere.js')}}"></script>
+{{end}}
+
+{{block header}}
+<center style="background-color: #333; color:white; padding:30px">
+  <h1> Maps Application </h1>
+</center>
+{{end}}
+<!-- As a link -->
+<div class="form-group">
+  <label for="campuslist">Select an option view: </label>
+  <select class="form-control" id="optionsView" name="optionsView">
+    <option value="" disabled selected> Select an option of view </option>
+    <option value="who-was"> Who was in the institution? </option>
+    <option value="who-are"> Who are inside in the insitution? </option>
+  </select>
 </div>
-<div class="col-sm-9">
-    <h3>Map</h3>
-    <div class="container col-sm-12 justify-content-center" id="mapid"></div>
-</div>
-<script>
-var mymap = L.map('mapid').setView([19.03339, -98.31622],19);
-L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: 'OpenStreetMap',
-    maxZoom: 19
-}).addTo(mymap);
 
-var marker1 = L.marker();
-var marker2 = L.marker();
-var marker3 = L.marker();
-var marker4 = L.marker();
+<div class="">
+  <div class="row">
+    <div class="col-sm-4" >
+      <div class="form-group" id="FormGroup1">
+        <h2>Who was in the institution?</h2>
+          <form method="GET" action="javascript:void(0);">
+            <label for="select-search-zone"> Select zone insitution: </label>
+            <select id="select-search-zone" name="selectorZone" class="form-control">
+              <option value="" disabled selected>Select an option</option>
+            </select>
+            <label for="options-search-user"> Search a user by: </label>
+            <select id="options-search-user" name="selectorSearch" class="form-control">
+              <option value="idDevice" selected> ID Device </option>
+              <option value="owner"> Owner Device </option>
+              <option value="username"> Username </option>
+            </select>
+            <label for="input-search" id="label-input-search">ID Device: </label>
+            <input type="text" name="input-search" id="input-search" class="form-control">
+            <label for="options-list" id="label-options-list"> Select a search parameter: </label>
+            <select id="options-list" name="selectorparameterSearch" class="form-control">
+              <option value="" disabled>Select an option</option>
+              <<!--option value="date"> Date </option>-->
+              <option value="dateTime" selected> Date and Time </option>
+            </select>
+            <label for="dateInput" id="label-date-input">Date: </label>
+            <!--<input type="date" name="date" id="dateInput" class="form-control">-->
+            <input type="datetime-local" name="dateTime" id="dateTimeInput" class="form-control">
+            <br>
+            <button type="button" id="query" onclick="searching()" class="btn btn-outline-success col-12"> Consult </button>
+          </form>
+        </div>
+        <div class="form-group" id="FormGroup2">
+          <h2>Who are inside in the institution?</h2>
+          <div class="form-group">
+            <label for="campuslist">Campus</label>
+            <select class="form-control" id="campuslist" name="campuslist">
+              <option>Choose the campus...</option>
+            </select>
+          </div>
+          <label for="device">Search by Device ID</label>
+          <input type="text" class="form-control" id="idDevice" placeholder="Search by Device ID">
+          <button class="btn btn-primary" id="deviceButton">Search</button>
+          <br>
+          <br>
+          <label for="exampleFormControlInput1">Search by user ID</label>
+          <input type="email" class="form-control" id="userid" placeholder="Example : User:41">
+          <button class="btn btn-primary" id="userIdButton" >Search</button>
+          <br>
+          <br>
+          <label for="exampleFormControlInput1">Search by user name</label>
+          <input type="email" class="form-control" id="name" placeholder="Example : Daniel Torres">
+          <button class="btn btn-primary" id="nameButton" >Search</button>
+          <br>
+          <br>
+        </div>
+      </div>
+      <div class="col-sm-8">
+        <h2 class="text-center"> Institution Map</h2>
+        <div id="mapid">
+        </div>
+      </div>
+    </div>
+  </div>
 
-function updateMarkers() {
-    //Camera 1
-    marker1.setLatLng([19.03353, -98.31621]).addTo(mymap);
-    marker1.bindPopup("<b>Camera name:</b> Hallway<br><b>Detections:</b> #<br><b>Other info:</b> #");
-    L.polygon([
-            [19.03353, -98.31621],
-            [19.03366, -98.31615],
-            [19.03363, -98.31610]
-        ])
-        .addTo(mymap);
-    //Camera 2
-    marker2.setLatLng([19.03171, -98.31600]).addTo(mymap);
-    marker2.bindPopup("<b>Camera name:</b> Main Entrance<br><b>Detections:</b> #<br><b>Other info:</b> #");
-    L.polygon([
-            [19.03171, -98.31600],
-            [19.03156, -98.31616],
-            [19.03167, -98.31622]
-        ])
-        .addTo(mymap);
-    //Camera 3
-    marker3.setLatLng([19.03139, -98.31694]).addTo(mymap);
-    marker3.bindPopup("<b>Camera name:</b> Parking Entrance<br><b>Detections:</b> #<br><b>Other info:</b> #");
-    L.polygon([
-            [19.03139, -98.31694],
-            [19.03143, -98.31707],
-            [19.03150, -98.31697]
-        ])
-        .addTo(mymap);
-    //Camera 4
-    marker4.setLatLng([19.03077, -98.31637]).addTo(mymap);
-    marker4.bindPopup("<b>Camera name:</b> Parking Lot<br><b>Detections:</b> #<br><b>Other info:</b> #");
-    L.polygon([
-            [19.03077, -98.31637],
-            [19.03086, -98.31693],
-            [19.03113, -98.31677]
-        ])
-        .addTo(mymap);
-    mymap.flyTo([19.0322,-98.31605],17);
-}
 
-function onMapClick(e) {
-    alert("You clicked the map at " + e.latlng);
-}
 
-//mymap.on('click', onMapClick);
-marker1.on('click', marker1.getPopup().openPopup());
-marker2.on('click', marker2.getPopup().openPopup());
-marker3.on('click', marker3.getPopup().openPopup());
-marker4.on('click', marker4.getPopup().openPopup());
-</script>
+
