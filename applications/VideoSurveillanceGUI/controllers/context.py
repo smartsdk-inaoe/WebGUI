@@ -119,8 +119,8 @@ def subscriptionUpdate():
 	for attr in request.post_vars.data[0]:
 		if 'value' in request.post_vars.data[0][attr]:
 			data[attr]=request.post_vars.data[0][attr]['value']
-		elif attr == 'id':
-			data['idAlert']=request.post_vars.data[0][attr]
+		#elif attr == 'id':
+		#	data['idAlert']=request.post_vars.data[0][attr]
 	db.alert.insert(**data)
 	
 def checkAlerts():
