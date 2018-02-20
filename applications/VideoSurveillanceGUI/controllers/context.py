@@ -21,8 +21,8 @@ def createEntity():
 	import requests
 	import json
 	from datetime import datetime
-	host = "130.206.113.226"
-	port = 1026
+	from gluon.contrib.appconfig import AppConfig
+	myconf = AppConfig(reload=True)
 	headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
 	data = {
 		"id": "DummyAlert16",
@@ -65,7 +65,7 @@ def createEntity():
 		}
 	}
 
-	r = requests.post("http://{}:{}/v2/entities".format(host,port), headers=headers, data=json.dumps(data))
+	r = requests.post("http://{}/v2/entities".format(myconf.take('cb.uri')), headers=headers, data=json.dumps(data))
 	return dict(result=str(r.status_code)+' '+r.text+' '+str(r.headers))
 	#return dict(result=data)
 
@@ -77,8 +77,8 @@ def contextSubscription():
 	import requests
 	import json
 	from datetime import datetime
-	host = "130.206.113.226"
-	port = 1026
+	from gluon.contrib.appconfig import AppConfig
+	myconf = AppConfig(reload=True)
 	headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
 	data = {
 		"description":"Web2py Alert",
@@ -103,9 +103,9 @@ def contextSubscription():
 		#"expires":"2040-01-01T14:00:00.00Z",	
 		"throttling": 5
 	}
-	#r = requests.patch("http://{}:{}/v2/subscriptions/59fe91ed002da071f2957259".format(host,port), headers=headers, data=json.dumps(data))
-	r = requests.post("http://{}:{}/v2/subscriptions".format(host,port), headers=headers, data=json.dumps(data))
-	#r = requests.delete("http://{}:{}/v2/subscriptions/5a84d5da3fc4dec59e4ef8e7".format(host,port))
+	#r = requests.patch("http://{}/v2/subscriptions/59fe91ed002da071f2957259".format(myconf.take('cb.uri')), headers=headers, data=json.dumps(data))
+	r = requests.post("http://{}/v2/subscriptions".format(myconf.take('cb.uri')), headers=headers, data=json.dumps(data))
+	#r = requests.delete("http://{}/v2/subscriptions/5a84d5da3fc4dec59e4ef8e7".format(myconf.take('cb.uri')))
 	return dict(result=str(r.status_code)+' '+r.text+' '+str(r.headers))#id=5a848f203fc4dec59e4ef8e5
 	#return dict(result=data)
 

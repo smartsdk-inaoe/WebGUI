@@ -21,3 +21,7 @@ separator =
 ; auth server
 [auth]
 uri = http://ip:port
+
+; context broker
+[cb]
+uri = ip:port
