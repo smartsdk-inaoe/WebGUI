@@ -29,7 +29,7 @@ def createEntity():
 		"type": "Alert",
 		"alertSource": {
 			"type": "Text",
-			"value": "Dummy Device 1"
+			"value": "SmartSDKSecurity Server"
 		},
 		"category": {
 			"type": "Text",
@@ -56,7 +56,7 @@ def createEntity():
 			"value": "dummy text"
 		},
 		"location": {
-			"type": "Text",
+			"type": "geo:point",
 			"value": "19.03, -98.32"
 		},
 		"severity": {
@@ -136,7 +136,7 @@ def resetAlerts():
 	
 	Auxiliary function to delete all the alerts in the database to restore the system to an initial test state.
 	"""
-	db.alerts.truncate()
+	db.alert.truncate()
 	return dict()
 
 def getNotifications():
