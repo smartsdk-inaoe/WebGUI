@@ -1,4 +1,5 @@
 {{extend 'kurentolayout.html'}}
+{{block head}}
 <script src="{{=URL('static','js/stream.js')}}"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
    integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
@@ -9,12 +10,20 @@
 <style>
 #mapid { height: 480px; }
 </style>
-<a id="update" href="#" class="btn btn-success" onclick="getMarkers()">
-	Simulate call
-</a>
+{{end}}
+<select id="camSelect">
+	<option value="1" selected>Cam 1</option>
+	<option value="2">Cam 2</option>
+	<option value="3">Cam 3</option>
+	<option value="4">Cam 4</option>
+</select>
+<a class="btn btn-success" onclick="sendAlert('low')">Low</a>
+<a class="btn btn-warning" onclick="sendAlert('medium')">Medium</a>
+<a class="btn btn-danger" onclick="sendAlert('high')">High</a>
 <h3>Map</h3>
 <div class="container col-sm-12 justify-content-center" id="mapid"></div>
-<script>
+{{block page_js}}
+<script type="text/javascript">
 var MyCustomMarker = L.Marker.extend({
      bindPopup: function(htmlContent, options) {
 		if (options && options.cam) {
@@ -46,8 +55,9 @@ var MyCustomMarker = L.Marker.extend({
 				}
 			}, this);
 			this.on("popupclose", function(e) {
+				if(this._currentPopup == 'stream')
+					stop(options.cam);
 				this._currentPopup = '';
-				stop(options.cam);
 			}, this);
 		}
 	},
@@ -67,10 +77,27 @@ var markers = new L.FeatureGroup();
 //var marker3 = L.marker();
 //var marker4 = L.marker();
 
+// Icons
+var greenIcon = L.icon({
+	iconUrl: '{{=URL('static','images/green-marker.png')}}',
+	iconAnchor: [22, 44],
+	popupAnchor: [0, -40]
+});
+var yellowIcon = L.icon({
+	iconUrl: '{{=URL('static','images/yellow-marker.png')}}',
+	iconAnchor: [22, 44],
+	popupAnchor: [0, -40]
+});
+var redIcon = L.icon({
+	iconUrl: '{{=URL('static','images/red-marker.png')}}',
+	iconAnchor: [22, 44],
+	popupAnchor: [0, -40]
+});
+	
 function getMarkers() {
     //Camera 1
 	var c1 = new camera('Hallway','CC Building','cam1','1');
-    var marker1 = new MyCustomMarker([19.03353, -98.31621]);
+    var marker1 = new MyCustomMarker([19.03353, -98.31621],{icon: greenIcon});
     marker1.bindPopup('<b>'+c1.name+' - '+c1.zone+'</b>', { cam: c1, closeOnClick: false });
     markers.addLayer(L.polygon([
             [19.03353, -98.31621],
@@ -78,10 +105,10 @@ function getMarkers() {
             [19.03363, -98.31610]
         ]));
 	markers.addLayer(marker1);
-	setInterval(function(){updateMarker(marker1)},3000);
+	setInterval(function(){askEvent(marker1)},3000);
     //Camera 2
 	var c2 = new camera('Parking Entrance','Outside','cam2','2');
-    var marker2 = new MyCustomMarker([19.03139, -98.31694]);
+    var marker2 = new MyCustomMarker([19.03139, -98.31694],{icon: greenIcon});
     marker2.bindPopup('<b>'+c2.name+' - '+c2.zone+'</b>', { cam: c2, closeOnClick: false });
     markers.addLayer(L.polygon([
             [19.03139, -98.31694],
@@ -89,10 +116,10 @@ function getMarkers() {
             [19.03150, -98.31697]
         ]));
 	markers.addLayer(marker2);
-	setInterval(function(){updateMarker(marker2)},3000);
+	setInterval(function(){askEvent(marker2)},3000);
     //Camera 3
 	var c3 = new camera('Main Entrance','Entrance','cam3','3');
-    var marker3 = new MyCustomMarker([19.03171, -98.31600]);
+    var marker3 = new MyCustomMarker([19.03171, -98.31600],{icon: greenIcon});
     marker3.bindPopup('<b>'+c3.name+' - '+c3.zone+'</b>', { cam: c3, closeOnClick: false });
     markers.addLayer(L.polygon([
             [19.03171, -98.31600],
@@ -100,10 +127,10 @@ function getMarkers() {
             [19.03167, -98.31622]
         ]));
 	markers.addLayer(marker3);
-	setInterval(function(){updateMarker(marker3)},3000);
+	setInterval(function(){askEvent(marker3)},3000);
     //Camera 4
 	var c4 = new camera('Parking Lot','Outside','cam4','4');
-    var marker4 = new MyCustomMarker([19.03077, -98.31637]);
+    var marker4 = new MyCustomMarker([19.03077, -98.31637],{icon: greenIcon});
     marker4.bindPopup('<b>'+c4.name+' - '+c4.zone+'</b>', { cam: c4, closeOnClick: false });
     markers.addLayer(L.polygon([
             [19.03077, -98.31637],
@@ -111,7 +138,7 @@ function getMarkers() {
             [19.03113, -98.31677]
         ]));
 	markers.addLayer(marker4);
-	setInterval(function(){updateMarker(marker4)},3000);
+	setInterval(function(){askEvent(marker4)},3000);
     mymap.flyTo([19.0322,-98.31605],17);
 }
 var contador=0;
@@ -136,4 +163,58 @@ function mapClick(e) {
 //marker3.on('click', marker3.getPopup().openPopup());
 //marker4.on('click', marker4.getPopup().openPopup());
 mymap.addLayer(markers);
+
+setTimeout(getMarkers, 1000);
+
+function askEvent(marker){
+	$.ajax({
+		url: "https://" + location.host + "{{=URL(c='context',f='getNotifications2')}}/" + marker.getPopup().options.cam.videourl,
+		success: function (data) {
+			//console.log(data);
+			var alerts = data.split(";");
+			var elements = '';
+			var severity = "low";
+			for(i=1;i<alerts.length;i++){
+				var values = alerts[i].split(",");
+				switch(values[1]) {
+					case "critical":
+					case "high":
+						if(severity != "high") {
+							severity = "high";
+						}
+						break;
+					case "medium":
+						if(severity == "low") {
+							severity = "medium";
+						}
+						break;
+					default:
+						break;
+				}
+				//elements += '<li>'+values[0]+' (severity:'+values[1]+"@"+values[2]+") - "+values[3].replace("T"," ").replace(".00Z"," ")+"</li>";
+				elements += '<li>'+values[0]+' (severity: '+values[1]+") - "+values[3].replace("T"," ").replace(".00Z"," ")+"</li>";
+			}
+			switch(severity) {
+				case "high":
+					marker.setIcon(redIcon);
+					break;
+				case "medium":
+					marker.setIcon(yellowIcon);
+					break;
+				default:
+					marker.setIcon(greenIcon);
+			}	
+			if(marker._currentPopup == 'context'){
+				marker.setPopupContent(elements);
+			}
+		}
+	});
+}
+
+function sendAlert(severity){
+	$.ajax({
+		url: "https://" + location.host + "{{=URL(c='context',f='createEntity')}}?cam=" + $("#camSelect").val() + "&level=" + severity
+	});
+}
 </script>
+{{end page_js}}

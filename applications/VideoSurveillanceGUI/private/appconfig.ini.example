@@ -24,4 +24,8 @@ uri = http://ip:port
 
 ; context broker
 [cb]
-uri = ip:port
+uri = http://ip:port
+
+; kurento media server
+[kurento]
+uri = wss://ip:port/player

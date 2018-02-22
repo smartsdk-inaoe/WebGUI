@@ -26,7 +26,7 @@
  *
  */
 
-var ws = new WebSocket('wss://' + location.hostname + ':8443/player'); //Modification of the original code to access the server from other computers
+var ws = new WebSocket(wsaddress);
 var video;
 var webRtcPeer;
 var state = null;

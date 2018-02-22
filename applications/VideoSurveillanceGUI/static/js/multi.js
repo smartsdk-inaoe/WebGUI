@@ -26,9 +26,6 @@
  *
  */
 
-/// @var address Websocket address to access the server from other computers
-var address = 'wss://' + location.hostname + ':8443/player'; 
-
 /// @function camera
 /// Definition of camera data to connect and send to the server, each camera will have a websocket to exchange messages with the server.
 /// @param {String} cname name (to display) of the camera
@@ -40,7 +37,7 @@ function camera(cname,czone,cid,url) {
 	this.name = cname,
 	this.zone = czone,
 	this.id = cid,
-	this.ws = new WebSocket(address),
+	this.ws = new WebSocket(wsaddress),
 	this.webRtcPeer = null,
         this.stream = false,
 	this.container = document.getElementById(this.id),

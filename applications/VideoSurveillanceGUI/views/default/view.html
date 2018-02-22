@@ -1,6 +1,6 @@
 {{extend 'kurentolayout.html'}}
+{{block head}}
 <script src="{{=URL('static','js/index.js')}}"></script>
-{{block header}}
 {{end}}
 <div id="Detections" class="col-sm-6" style="height:800px">
     <h2>Search by</h2>
@@ -94,7 +94,8 @@
     <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
     </p>
-<script>
+{{block page_js}}
+<script type="text/javascript">
     var retry_id = null;
     function toggleFilter() {
         //$("#filterdiv .form-control").prop("disabled", false);
@@ -123,3 +124,4 @@
         retry_id=setTimeout(function(){getStream()}, 5000);
     }
 </script>
+{{end page_js}}

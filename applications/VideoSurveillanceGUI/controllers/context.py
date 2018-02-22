@@ -24,12 +24,12 @@ def createEntity():
 	from gluon.contrib.appconfig import AppConfig
 	myconf = AppConfig(reload=True)
 	headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
+	latlng = {'1':'19.03353, -98.31621','2':'19.03139, -98.31694','3':'19.03171, -98.31600','4':'19.03077, -98.31637'}
+	names = {'1':'Hallway','2':'Parking Entrance','3':'Main Entrance','4':'Parking Lot'}
 	data = {
-		"id": "DummyAlert16",
-		"type": "Alert",
 		"alertSource": {
 			"type": "Text",
-			"value": "SmartSDKSecurity Server"
+			"value": "Camera{}: {}".format(request.vars['cam'],names[request.vars['cam']])
 		},
 		"category": {
 			"type": "Text",
@@ -53,21 +53,24 @@ def createEntity():
 		},
 		"description": {
 			"type": "Text",
-			"value": "dummy text"
+			"value": "Test alert from WebGUI"
 		},
 		"location": {
 			"type": "geo:point",
-			"value": "19.03, -98.32"
+			"value": latlng[request.vars['cam']]
 		},
 		"severity": {
 			"type": "Text",
-			"value": "low"
+			"value": request. vars['level']
 		}
 	}
 
-	r = requests.post("http://{}/v2/entities".format(myconf.take('cb.uri')), headers=headers, data=json.dumps(data))
-	return dict(result=str(r.status_code)+' '+r.text+' '+str(r.headers))
+	#r = requests.post("{}/v2/entities/".format(myconf.take('cb.uri')), headers=headers, data=json.dumps(data))
+	r = requests.patch("{}/v2/entities/Camera-{}/attrs".format(myconf.take('cb.uri'),request.vars['cam']), headers=headers, data=json.dumps(data))
+	#return dict(result=str(r.status_code)+' '+r.text+' '+str(r.headers))
 	#return dict(result=data)
+	print r.status_code,r.text,r.headers
+	return 0
 
 def contextSubscription():
 	"""Subscription
@@ -103,9 +106,9 @@ def contextSubscription():
 		#"expires":"2040-01-01T14:00:00.00Z",	
 		"throttling": 5
 	}
-	#r = requests.patch("http://{}/v2/subscriptions/59fe91ed002da071f2957259".format(myconf.take('cb.uri')), headers=headers, data=json.dumps(data))
-	r = requests.post("http://{}/v2/subscriptions".format(myconf.take('cb.uri')), headers=headers, data=json.dumps(data))
-	#r = requests.delete("http://{}/v2/subscriptions/5a84d5da3fc4dec59e4ef8e7".format(myconf.take('cb.uri')))
+	#r = requests.patch("{}/v2/subscriptions/59fe91ed002da071f2957259".format(myconf.take('cb.uri')), headers=headers, data=json.dumps(data))
+	r = requests.post("{}/v2/subscriptions".format(myconf.take('cb.uri')), headers=headers, data=json.dumps(data))
+	#r = requests.delete("{}/v2/subscriptions/5a84d5da3fc4dec59e4ef8e7".format(myconf.take('cb.uri')))
 	return dict(result=str(r.status_code)+' '+r.text+' '+str(r.headers))#id=5a848f203fc4dec59e4ef8e5
 	#return dict(result=data)
 
@@ -144,12 +147,29 @@ def getNotifications():
 	
 	This functions retrieves the alerts in the database which id is bigger than the first argument in the request.
 	"""
+	import datetime;
 	lastId = 0
 	if request.args(0):
-		lastId = request.args(0)
+		#print request.args(0)
+		lastId = datetime.datetime.strptime(request.args(0),'%Y-%m-%d-%H-%M-%S')
 	events = ''
-	for row in db(db.alert.idAlert>lastId).select():
-		events += ';'+row.description+','+row.alertSource+','+row.address+','+row.dateObserved.isoformat()
-		lastId = row.idAlert
-	events = str(lastId) + events
+	for row in db(db.alert.dateObserved>lastId).select():
+		events += ';'+row.description+','+row.alertSource+','+row.severity+','+row.dateObserved.isoformat()
+		lastId = row.dateObserved
+	events = lastId.strftime('%Y-%m-%d-%H-%M-%S') + events
+	return events
+
+def getNotifications2():
+	"""Get notifications
+	
+	This functions retrieves the alerts in the database which id is bigger than the first argument in the request.
+	"""
+	from datetime import datetime, timedelta
+	cam = 0
+	events = ''
+	latlng = {'1':'19.03353, -98.31621','2':'19.03139, -98.31694','3':'19.03171, -98.31600','4':'19.03077, -98.31637'}
+	if request.args(0):
+		for row in db((db.alert.location==latlng[request.args(0)])&(db.alert.dateObserved>(datetime.now()-timedelta(minutes=15)))).select():
+			events += ';'+row.description+','+row.severity+','+row.address+','+row.dateObserved.isoformat()
+	events = str(cam) + events
 	return events

@@ -1,6 +1,6 @@
 {{extend 'kurentolayout.html'}}
+{{block head}}
 <script src="{{=URL('static','js/multi.js')}}"></script>
-{{block header}}
 {{end}}
 <div class="col-md-3">
     <h3>
@@ -68,7 +68,8 @@
         <li style="color:#aaa;"><a style="color:#aaa;">Event 1 (normal) - timestamp</a></li-->
     </ul>
 </div>
-<script>
+{{block page_js}}
+<script type="text/javascript">
 	var c1;
 	var c2;
 	var c3;
@@ -157,10 +158,10 @@
         updateCam();
     }
 
-    var lastId = 0;
+    var lastId = '2017-01-01-00-00-00';
     function askEvent(){
         $.ajax({
-            url: "https://" + location.host + "/context/getNotifications/"+lastId,
+            url: "https://" + location.host + "{{=URL(c='context',f='getNotifications')}}/" + lastId,
             success: function (data) {
                 //console.log(data);
                 var alerts = data.split(";");
@@ -168,17 +169,18 @@
                 for(i=1;i<alerts.length;i++){
                     var values = alerts[i].split(",");
                     var color = "000";
-                    switch(values[0]) {
-                        case 'UnauthorizedSpeedDetection - smartphone-Leon':
+                    switch(values[2]) {
+                        case 'high':
                             color = "00c";
                             break;
-                        case 'PruebaTelefono':
+                        case 'medium':
                             color = "444";
                             break;
                         default:
                             color = "181";
                     }
-                    var element = '<li style="color:#'+color+';">'+values[0]+' ('+values[1]+"@"+values[2]+") - "+values[3].replace("T"," ").replace(".00Z"," ")+"</li>";
+                    //var element = '<li style="color:#'+color+';">'+values[0]+' ('+values[1]+"@"+values[2]+") - "+values[3].replace("T"," ").replace(".00Z"," ")+"</li>";
+					var element = '<li style="color:#'+color+';">'+values[0]+' ('+values[1]+") - "+values[3].replace("T"," ").replace(".00Z"," ")+"</li>";
                     $("#activity_log").prepend(element);
                 }
             }
@@ -188,3 +190,4 @@
     }
     setInterval(askEvent, 3000);
 </script>
+{{end page_js}}
