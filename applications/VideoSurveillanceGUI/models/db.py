@@ -167,3 +167,5 @@ auth.settings.register_onvalidation = encryptPassword
 
 from gluon.contrib.login_methods.basic_auth import basic_auth
 auth.settings.login_methods = [basic_auth(myconf.take('auth.uri')+'/basicauth')]
+
+wsAddress = myconf.take('kurento.uri')
