@@ -196,16 +196,14 @@ def filters():
 	if form.process().accepted:
 		response.flash = 'MyForm accepted'
 	if len(request.vars):
-		return request.vars['PersonDetectionM']+request.vars['CarDetectionM']+request.vars['BlobDetectionM']
-	if False:
 		for fiN,foN in zip(fileNames,formNames):
 			element = root.find(fiN+'Color')
-			element.text = str(form.vars[foN+'C'][4:-1])
+			element.text = str(request.vars[foN+'C'][4:-1])
 			element = root.find(fiN+'Method')
-			element.text = str(form.vars[foN+'M'])
+			element.text = str(request.vars[foN+'M'])
 			if form.vars[foN+'M']=='3':
 				element = root.find(fiN+'Text')
-				element.text = str(form.vars[foN+'T'])
+				element.text = str(request.vars[foN+'T'])
 		tree.write('/home/viva22017/SmartSecurityApp/kurento/label_config.xml')
 		response.flash = 'Filters updated successfully'
 	return dict(form=form,names=formNames)

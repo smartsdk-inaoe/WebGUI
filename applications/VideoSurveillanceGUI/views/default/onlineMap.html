@@ -12,15 +12,14 @@
 </style>
 {{end}}
 <select id="camSelect">
-	<option value="1" selected>Cam 1</option>
-	<option value="2">Cam 2</option>
-	<option value="3">Cam 3</option>
-	<option value="4">Cam 4</option>
+	<option value="1" selected>Hallway</option>
+	<option value="2">Parking entrance</option>
+	<option value="3">Entrance</option>
+	<option value="4">Parking lot</option>
 </select>
 <a class="btn btn-success" onclick="sendAlert('low')">Low</a>
 <a class="btn btn-warning" onclick="sendAlert('medium')">Medium</a>
 <a class="btn btn-danger" onclick="sendAlert('high')">High</a>
-<h3>Map</h3>
 <div class="container col-sm-12 justify-content-center" id="mapid"></div>
 {{block page_js}}
 <script type="text/javascript">

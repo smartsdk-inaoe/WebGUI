@@ -80,7 +80,6 @@
 </div-->
 <div class="form-group col-sm-offset-1 col-sm-10">
     <div class="col-sm-12">
-        {{=form.custom.submit}}
         <a id="update" href="#" class="btn btn-success" onclick="updateVars()">
             Update
         </a>
@@ -149,7 +148,7 @@ function updateVars() {
             success: function (data) {
               //$(".w2p_flash").html(data).slideDown();
               //$('.w2p_flash').html('').hide();
-              $('.w2p_flash').removeClass("alert alert-dismissable").html('');
+              //$('.w2p_flash').removeClass("alert alert-dismissable").html('');
               //if($(".w2p_flash").contents().first()[0]){
                   //$.web2py.flash("ok");
                   //$(".w2p_flash").contents().first()[0].textContent='mydata';
