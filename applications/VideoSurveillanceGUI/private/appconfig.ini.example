@@ -22,6 +22,10 @@ separator =
 [auth]
 uri = http://ip:port
 
+; keystone server
+[keystone]
+uri = http://ip:port
+
 ; context broker
 [cb]
 uri = http://ip:port

@@ -41,11 +41,13 @@ def view():
 	cameras['0']=T('Any camera')
 	for c in db(db.camera.id>0).select():
 		cameras[c.id]=c.name
+	# Video search options
 	form=SQLFORM.factory(Field('type',requires=IS_IN_SET({0:'Any type',1:'Person',2:'Vehicle'},zero=None)),
 					Field('camera',requires=IS_IN_SET(cameras,zero=None)),
 					Field('start','date'),
 					Field('end','date'),
 					table_name='filter')
+	# Face search options
 	form2=SQLFORM.factory(Field('face','upload',uploadfolder=request.folder+'uploads'),
 					table_name='search')
 	form.element(_id='filter_start')['_placeholder']='Start date'
@@ -67,6 +69,7 @@ def getVideos():
 	with open('/path/to/config.yaml') as f:
 		dataMap=yaml.safe_load(f)
 	for f in os.listdir(dataMap['video path']):
+		# Files have a structured name: eventType_camera_date_time example: 0_1_2018-02-12_10-10-58.avi 
 		s=f.split('_')
 		if len(s)>3:
 			f_type=False
@@ -89,7 +92,9 @@ def getVideos():
 					fp='Person'
 				elif s[0]=='2':
 					fp='Vehicle'
+				# Build the title of the video using: detectionType - cameraName - date - hour
 				fp=fp+' - '+db.camera[int(s[1])].name+' - '+s[2]+' - '+s[3].replace('-',':')
+				# Create the link to stop current video and play the new one
 				files.append(str(XML(LI(A(fp,_onclick="stop();document.getElementById('videourl').value='"+f+"';document.getElementById('videotitle').innerHTML='"+fp+"'",_style="cursor:pointer;")))))
 	return files
 
@@ -120,28 +125,15 @@ def cameras():
 
 	When the page its accessed without arguments, it displays a form to add a camera to the system.
 	"""
+	# List of available cameras
 	form = SQLFORM.grid(db.camera,searchable=False,details=False,csv=False,onvalidation=validateCam,ondelete=deleteCam)
+	# If there is an argument in the request, then shows the 'edit camera' page with a button to return to the list of cameras
 	if request.args(0):
 		form[0][0][1][0] = 'Back'
 		form['_class'] = 'col-sm-offset-3 col-sm-6'
+	# When no arguments are received, the page shows a button to add a new camera
 	else:
 		form[0][0][1][0] = 'Add Camera'
-	return dict(form=form)
-	if request.args(0):
-		c=db.camera[request.args(0)]
-		form = SQLFORM.factory(
-			Field('name', requires=IS_NOT_EMPTY(), label='Camera name',default=c.name),
-			Field('url', label='Connection URL', default=c.url),
-			Field('c_zone', requires=IS_NOT_EMPTY(), label='Zone', default=c.c_zone))
-		if form.process().accepted:
-			db(db.camera.id==c.id).update(**db.camera._filter_fields(form.vars))
-	else:
-		form = SQLFORM.factory(
-			Field('name', requires=IS_NOT_EMPTY(), label='Camera name'),
-			Field('url', label='Connection URL'),
-			Field('c_zone', requires=IS_NOT_EMPTY(), label='Zone'))
-		if form.process().accepted:
-			c_id = db.camera.insert(**db.camera._filter_fields(form.vars))
 	return dict(form=form)
 
 def validateCam(form):
@@ -160,8 +152,11 @@ def filters():
 	For security, it's required that an administrator is logged in to view the page.
 	"""
 	import xml.etree.ElementTree as ET
+	# Elements of the selector
 	methods = {'1':'Bounding Box','2':'Enclosing Circle','4':'Filling Object','3':'Text Tag'}
+	# Names of the detectors in the form
 	formNames = ['CarDetection','PersonDetection','BlobDetection']#,'DogDetection']
+	# Names of the detectors in the file
 	fileNames = ['OutdoorPeople','IndoorPeople','Visualizer']
 	form = SQLFORM.factory(Field(formNames[0],type="boolean",label="Car Detection"),
 						   Field(formNames[0]+"M",requires=IS_IN_SET(methods,zero=None)),
@@ -180,6 +175,7 @@ def filters():
 						   #Field("DogDetectionC"))
 	tree = ET.parse('/home/viva22017/SmartSecurityApp/kurento/label_config.xml')
 	root = tree.getroot()
+	# Read values for each detector in the file and populate the form
 	for fiN,foN in zip(fileNames,formNames):
 		element = root.find(fiN+'Color')
 		form.vars[foN+'C'] = "RGB("+element.text+")"
@@ -187,15 +183,16 @@ def filters():
 		form.vars[foN+'M'] = element.text
 		element = root.find(fiN+'Text')
 		form.vars[foN+'T'] = element.text
+	# Add special functionalities to the form
 	for name in formNames:
 		form.element("input",_name=str(name))["_onclick"]="showMe(this,'"+name+"')"
 		form.vars[name] = True
 		form.element("select",_name=str(name+'M'))["_onchange"]="enableMe(this,'#no_table_"+name+"T')"
 		if form.vars[name+'M']!='3':
 			form.element("input",_name=str(name+'T'))["_disabled"]=True
-	if form.process().accepted:
-		response.flash = 'MyForm accepted'
+	# If the page is called with values
 	if len(request.vars):
+		# Write the values of the form to the file
 		for fiN,foN in zip(fileNames,formNames):
 			element = root.find(fiN+'Color')
 			element.text = str(request.vars[foN+'C'][4:-1])
@@ -215,23 +212,23 @@ def users():
 	This view shows a list of the users that made a registration request to access the system, a list of the current users is also displayed.
 	For security, it's required that an Administrator is logged in to view the page.
 	"""
-	#form = SQLFORM.grid(db.authUser,searchable=False,create=False,details=False,csv=False,onvalidation=validateUser,ondelete=deleteUser)
-	if request.args(0):
-		response.flash=request.args(0)
 	db.authUser.id.readable=False
 	form = SQLFORM.grid((db.authUser.registration_key=='pending'),links=[dict(header='Action',body=lambda row:  DIV(SELECT(OPTION('Administrator',_value='1'),OPTION('Security',_value='2'),OPTION('Mobile',_value='3'),_name='role'+str(row.id)),A('Accept',_onclick='ajax("'+URL('accept/'+str(row.id))+'",["role'+str(row.id)+'"],":eval")',_class='button btn btn-default'),_class='row_buttons'))],searchable=False,editable=False,deletable=False,create=False,details=False,csv=False)
 	form2 = SQLFORM.grid(db.authUser.registration_key=='',searchable=False,create=False,details=False,csv=False,onvalidation=validateUser,ondelete=deleteUser)
 	return dict(pendingUsers=form, registeredUsers=form2)
 	
 def accept():
+	"""Accept user
+	
+	This function allows the creation of a new user in keystone and the corresponding DB modifications in web2py.
+	"""
+	# Obtain user
 	row = db.authUser[request.args(0)]
 	from encryption import crypt
+	# Decrypt password
 	row.password=crypt('decrypt', row.password)
 
 	import requests
-	host = "207.249.127.96"
-	port = 8001
-	url = "http://{}:{}/v3/users".format(host,port)
 	payload = '{"user": \
 					{'+'\
 						"username": "{first_name}",\
@@ -249,15 +246,20 @@ def accept():
 		'content-type': "application/json"
 		}
 
-	r = requests.post(url, data=payload, headers=headers)
+	# Request user creation in keystone
+	r = requests.post("{}/v3/users".format(myconf.take('keystone.uri')), data=payload, headers=headers)
 
 	#print r.status_code
+	# If the user exists (error 409) or another error is returned, show a message
 	if r.status_code>=400:
 		response.flash = 'Error: Duplicate Entry' if r.status_code==409 else r.json()['error']['title']
 		return ""
+	# Accept user
 	row.update_record(registration_key='')
+	# Insert role
 	db.authMembership.insert(user_id=row.id,group_id=request.vars['role'+str(row.id)])
 	response.flash = 'User added successfully'
+	# Remove row from list of new users
 	return "$('tr#{}').remove();".format(row.id)
 
 def validateUser(form):
@@ -268,45 +270,20 @@ def deleteUser(table, id):
 	session.flash = 'Action not available...'
 	redirect(URL(f='users'))
 
-#@auth.requires_login()
+@auth.requires(auth.has_membership(auth.id_group('Administrator')) or auth.has_membership(auth.id_group('Security')))
 def campusZonesMap():
-	"""Map view
+	"""Map search view
 	
 	This view will allow the search and localization of users in the map.
 	"""
-	return dict()
+	return dict(message = T('Institution Map'))
 	
-def popupHoverMap():
-    form=SQLFORM.factory(Field('device'),
-                    Field('username'),
-                    Field('user'),
-                    table_name='filter')
-    form.element(_id='filter_device')['_placeholder']='ID Device'
-    form.element(_id='filter_username')['_placeholder']='Username'
-    form.element(_id='filter_user')['_placeholder']='ID User'
-    return dict(form=form)
-	
-def streamMap():
-    form=SQLFORM.factory(Field('device'),
-                    Field('username'),
-                    Field('user'),
-                    table_name='filter')
-    form.element(_id='filter_device')['_placeholder']='ID Device'
-    form.element(_id='filter_username')['_placeholder']='Username'
-    form.element(_id='filter_user')['_placeholder']='ID User'
-    return dict(form=form)
-	
-def eventMap():
-    form=SQLFORM.factory(Field('device'),
-                    Field('username'),
-                    Field('user'),
-                    table_name='filter')
-    form.element(_id='filter_device')['_placeholder']='ID Device'
-    form.element(_id='filter_username')['_placeholder']='Username'
-    form.element(_id='filter_user')['_placeholder']='ID User'
-    return dict(form=form)
-	
+@auth.requires(auth.has_membership(auth.id_group('Administrator')) or auth.has_membership(auth.id_group('Security')))
 def onlineMap():
+	"""Map cameras view
+	
+	This view shows the camera locations in the map, it allows the visualization of camera streams and the last events detected by those cameras.
+	"""
 	return dict()
 	
 @auth.requires_login()

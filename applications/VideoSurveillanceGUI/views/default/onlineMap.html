@@ -8,7 +8,7 @@
    integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
    crossorigin=""></script>
 <style>
-#mapid { height: 480px; }
+#mapid { height: 75vh; }
 </style>
 {{end}}
 <select id="camSelect">
@@ -16,6 +16,7 @@
 	<option value="2">Parking entrance</option>
 	<option value="3">Entrance</option>
 	<option value="4">Parking lot</option>
+	<option value="5">Hallway 3</option>
 </select>
 <a class="btn btn-success" onclick="sendAlert('low')">Low</a>
 <a class="btn btn-warning" onclick="sendAlert('medium')">Medium</a>
@@ -24,7 +25,7 @@
 {{block page_js}}
 <script type="text/javascript">
 var MyCustomMarker = L.Marker.extend({
-     bindPopup: function(htmlContent, options) {
+	bindPopup: function(htmlContent, options) {
 		if (options && options.cam) {
 			// call the super method
 			L.Marker.prototype.bindPopup.apply(this, [htmlContent, options]);
@@ -65,8 +66,8 @@ var MyCustomMarker = L.Marker.extend({
 
 var mymap = L.map('mapid').setView([19.03339, -98.31622],19);
 L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: 'OpenStreetMap',
-    maxZoom: 19
+	attribution: 'OpenStreetMap',
+	maxZoom: 19
 }).addTo(mymap);
 
 var markers = new L.FeatureGroup();
@@ -94,51 +95,62 @@ var redIcon = L.icon({
 });
 	
 function getMarkers() {
-    //Camera 1
+	//Camera 1
 	var c1 = new camera('Hallway','CC Building','cam1','1');
-    var marker1 = new MyCustomMarker([19.03353, -98.31621],{icon: greenIcon});
-    marker1.bindPopup('<b>'+c1.name+' - '+c1.zone+'</b>', { cam: c1, closeOnClick: false });
-    markers.addLayer(L.polygon([
-            [19.03353, -98.31621],
-            [19.03366, -98.31615],
-            [19.03363, -98.31610]
-        ]));
+	var marker1 = new MyCustomMarker([19.03353, -98.31621],{icon: greenIcon});
+	marker1.bindPopup('<b>'+c1.name+' - '+c1.zone+'</b>', { cam: c1, closeOnClick: false });
+	markers.addLayer(L.polygon([
+			[19.03353, -98.31621],
+			[19.03366, -98.31615],
+			[19.03363, -98.31610]
+		]));
 	markers.addLayer(marker1);
 	setInterval(function(){askEvent(marker1)},3000);
-    //Camera 2
+	//Camera 2
 	var c2 = new camera('Parking Entrance','Outside','cam2','2');
-    var marker2 = new MyCustomMarker([19.03139, -98.31694],{icon: greenIcon});
-    marker2.bindPopup('<b>'+c2.name+' - '+c2.zone+'</b>', { cam: c2, closeOnClick: false });
-    markers.addLayer(L.polygon([
-            [19.03139, -98.31694],
-            [19.03143, -98.31707],
-            [19.03150, -98.31697]
-        ]));
+	var marker2 = new MyCustomMarker([19.03139, -98.31694],{icon: greenIcon});
+	marker2.bindPopup('<b>'+c2.name+' - '+c2.zone+'</b>', { cam: c2, closeOnClick: false });
+	markers.addLayer(L.polygon([
+			[19.03139, -98.31694],
+			[19.03143, -98.31707],
+			[19.03150, -98.31697]
+		]));
 	markers.addLayer(marker2);
 	setInterval(function(){askEvent(marker2)},3000);
-    //Camera 3
+	//Camera 3
 	var c3 = new camera('Main Entrance','Entrance','cam3','3');
-    var marker3 = new MyCustomMarker([19.03171, -98.31600],{icon: greenIcon});
-    marker3.bindPopup('<b>'+c3.name+' - '+c3.zone+'</b>', { cam: c3, closeOnClick: false });
-    markers.addLayer(L.polygon([
-            [19.03171, -98.31600],
-            [19.03156, -98.31616],
-            [19.03167, -98.31622]
-        ]));
+	var marker3 = new MyCustomMarker([19.03171, -98.31600],{icon: greenIcon});
+	marker3.bindPopup('<b>'+c3.name+' - '+c3.zone+'</b>', { cam: c3, closeOnClick: false });
+	markers.addLayer(L.polygon([
+			[19.03171, -98.31600],
+			[19.03156, -98.31616],
+			[19.03167, -98.31622]
+		]));
 	markers.addLayer(marker3);
 	setInterval(function(){askEvent(marker3)},3000);
-    //Camera 4
+	//Camera 4
 	var c4 = new camera('Parking Lot','Outside','cam4','4');
-    var marker4 = new MyCustomMarker([19.03077, -98.31637],{icon: greenIcon});
-    marker4.bindPopup('<b>'+c4.name+' - '+c4.zone+'</b>', { cam: c4, closeOnClick: false });
-    markers.addLayer(L.polygon([
-            [19.03077, -98.31637],
-            [19.03086, -98.31693],
-            [19.03113, -98.31677]
-        ]));
+	var marker4 = new MyCustomMarker([19.03077, -98.31637],{icon: greenIcon});
+	marker4.bindPopup('<b>'+c4.name+' - '+c4.zone+'</b>', { cam: c4, closeOnClick: false });
+	markers.addLayer(L.polygon([
+			[19.03077, -98.31637],
+			[19.03086, -98.31693],
+			[19.03113, -98.31677]
+		]));
 	markers.addLayer(marker4);
 	setInterval(function(){askEvent(marker4)},3000);
-    mymap.flyTo([19.0322,-98.31605],17);
+	//Camera 5
+	var c5 = new camera('Hallway 3','CC Building','cam5','5');
+	var marker5 = new MyCustomMarker([19.03366, -98.3161],{icon: greenIcon});
+	marker5.bindPopup('<b>'+c5.name+' - '+c5.zone+'</b>', { cam: c5, closeOnClick: false });
+	markers.addLayer(L.polygon([
+			[19.03077, -98.31637],
+			[19.03086, -98.31693],
+			[19.03113, -98.31677]
+		]));
+		markers.addLayer(marker5);
+		setInterval(function(){askEvent(marker5)},3000);
+	mymap.flyTo([19.0322,-98.31605],17);
 }
 var contador=0;
 function updateMarker(marker) {
@@ -149,7 +161,7 @@ function updateMarker(marker) {
 }
 
 function getClickCoordinates(e) {
-    alert("You clicked the map at " + e.latlng);
+	alert("You clicked the map at " + e.latlng);
 }
 function mapClick(e) {
 	markers.getLayers()[1].openPopup();

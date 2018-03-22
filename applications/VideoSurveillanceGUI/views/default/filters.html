@@ -122,20 +122,7 @@ function enableMe(sender, box){
         $(box).prop("disabled", true);
 }
 
-{{if request.args(0):}}
-var ws = new WebSocket('wss://' + location.hostname + ':8443/player');
-ws.onopen = sendMessage;
-function sendMessage() {
-	var message = {id : 'updateLabels'};
-	var jsonMessage = JSON.stringify(message);
-	console.log('Sending message: ' + jsonMessage);
-	try{
-		ws.send(jsonMessage);
-	}catch(error){
-		console.error('('+this.name+') Error: '+error.message);
-	}
-	ws.close();
-}
+{{if request.vars:}}
 {{pass}}
 function updateVars() {
     $.ajax({
@@ -152,6 +139,19 @@ function updateVars() {
               //if($(".w2p_flash").contents().first()[0]){
                   //$.web2py.flash("ok");
                   //$(".w2p_flash").contents().first()[0].textContent='mydata';
+              var ws = new WebSocket(wsaddress);
+              ws.onopen = sendMessage;
+              function sendMessage() {
+	          var message = {id : 'updateLabels'};
+	          var jsonMessage = JSON.stringify(message);
+	          console.log('Sending message: ' + jsonMessage);
+	          try{
+		      ws.send(jsonMessage);
+	          }catch(error){
+                      console.error('('+this.name+') Error: '+error.message);
+	          }
+	          ws.close();
+              }
             }
     });
 }
