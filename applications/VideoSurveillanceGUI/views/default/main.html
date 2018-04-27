@@ -35,27 +35,15 @@
         <video id="video" autoplay style="width:100%;height:75%" poster="{{=URL('static','images/webrtc.png')}}"></video>
     </div>
     <div id="carousel" class="col-md-11" style="overflow-x:auto;overflow-y:hidden;">
-        <div style="width:170%;">
-            <div id="cam1" style="width:18%;margin-right:10px;display:inline-block;" onclick="changeCam(c1)">
+        {{cameras=db().select(db.camera.ALL)}}
+        {{ncam=len(cameras) if len(cameras)<10 else 9}}
+        <div style="width:{{=34*ncam}}%;">
+            {{for cid in range(1,ncam+1):}}
+            <div id="cam{{=cid}}" style="width:{{=90/ncam}}%;margin-right:10px;display:inline-block;" onclick="changeCam(c{{=cid}})">
                 <span><br/></span>
-                <video id="video1" autoplay style="width:100%" poster="{{=URL('static','images/webrtc.png')}}"></video>
+                <video id="video{{=cid}}" autoplay style="width:100%" poster="{{=URL('static','images/webrtc.png')}}"></video>
             </div>
-            <div id="cam2" style="width:18%;margin-right:10px;display:inline-block;" onclick="changeCam(c2)">
-                <span><br/></span>
-                <video id="video2" autoplay style="width:100%" poster="{{=URL('static','images/webrtc.png')}}"></video>
-            </div>
-            <div id="cam3" style="width:18%;margin-right:10px;height:180px;display:inline-block;" onclick="changeCam(c3)">
-                <span><br/></span>
-                <video id="video3" autoplay style="width:100%" poster="{{=URL('static','images/webrtc.png')}}"></video>
-            </div>
-            <div id="cam4" style="width:18%;margin-right:10px;display:inline-block;" onclick="changeCam(c4)">
-                <span><br/></span>
-                <video id="video4" autoplay style="width:100%" poster="{{=URL('static','images/webrtc.png')}}"></video>
-            </div>
-            <div id="cam5" style="width:18%;margin-right:10px;display:inline-block;" onclick="changeCam(c5)">
-                <span><br/></span>
-                <video id="video5" autoplay style="width:100%" poster="{{=URL('static','images/webrtc.png')}}"></video>
-            </div>
+            {{pass}}
         </div>
     </div>
 </div>
@@ -68,58 +56,33 @@
 </div>
 {{block page_js}}
 <script type="text/javascript">
-	var c1;
-	var c2;
-	var c3;
-	var c4;
-	var c5;
+	{{for c in range(1,ncam+1):}}
+	var c{{=c}};
+	{{pass}}
 	var currentC;
 
 	window.onload = function() {
-		{{c=db.camera[1]}}
-		c1 = new camera('{{=c.name}}','{{=c.c_zone}}','video1','1');
-		c1.ws.onopen = function(){start(c1)};
-		{{c=db.camera[2]}}
-		c2 = new camera('{{=c.name}}','{{=c.c_zone}}','video2','2');
-		c2.ws.onopen = function(){start(c2)};
-		{{c=db.camera[3]}}
-		c3 = new camera('{{=c.name}}','{{=c.c_zone}}','video3','3');
-		c3.ws.onopen = function(){start(c3)};
-		{{c=db.camera[4]}}
-		c4 = new camera('{{=c.name}}','{{=c.c_zone}}','video4','4');
-		c4.ws.onopen = function(){start(c4)};
-		{{c=db.camera[5]}}
-		c5 = new camera('{{=c.name}}','{{=c.c_zone}}','video5','5');
-		c5.ws.onopen = function(){start(c5)};
+		{{for cid in range(1,ncam+1):}}
+		{{c=db.camera[cid]}}
+		c{{=cid}} = new camera('{{=c.name}}','{{=c.c_zone}}','video{{=cid}}','{{=cid}}');
+		c{{=cid}}.ws.onopen = function(){start(c{{=cid}})};
+		document.getElementById('cam{{=cid}}').childNodes[1].innerHTML=c{{=cid}}.name;
+		{{pass}}
+		document.getElementById('live_view').childNodes[1].innerHTML=name;
 		{{c=request.args(0) or '1'}}
-		{{if int(c)>5:}}
+		{{if int(c)>ncam:}}
 		var name = "Camera {{=c}} (Not connected)";
 		{{else:}}
 		var name = c{{=c}}.name+' - '+c{{=c}}.zone;
 		currentC = c{{=c}};
 		updateCam();
 		{{pass}}
-		document.getElementById('live_view').childNodes[1].innerHTML=name;
-		document.getElementById('cam1').childNodes[1].innerHTML=c1.name;
-		document.getElementById('cam2').childNodes[1].innerHTML=c2.name;
-		document.getElementById('cam3').childNodes[1].innerHTML=c3.name;
-		document.getElementById('cam4').childNodes[1].innerHTML=c4.name;
-		document.getElementById('cam5').childNodes[1].innerHTML=c5.name;
 	}
 
 	window.onbeforeunload = function() {
-		c1.close();
-		c2.close();
-		c3.close();
-		c4.close();
-		c5.close();
-	}
-
-	function connect() {
-			//start(c1);
-			start(c2);
-			start(c3);
-			start(c4);
+		{{for cid in range(1,ncam+1):}}
+		c{{=cid}}.close();
+		{{pass}}
 	}
 
 	function updateCam() {

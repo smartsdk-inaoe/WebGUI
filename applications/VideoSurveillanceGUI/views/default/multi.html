@@ -18,7 +18,7 @@
 
 	window.onload = function() {
     {{for cid in range(1,10):}}
-        {{if cid<len(cameras)+1:}}
+        {{if cid<ncam:}}
         {{c=cameras[cid-1]}}
         c{{=cid}} = new camera('{{=c.name}}','{{=c.c_zone}}','video{{=cid}}','{{=cid}}')
         c{{=cid}}.ws.onopen = function(){start(c{{=cid}})};
@@ -41,19 +41,5 @@
     {{pass}}
     }
 
-    /*function getStream(cam){
-        if(!cam.stream){
-            if(document.getElementById(cam.id).src!="")
-                stop(cam);
-            start(cam);
-            setTimeout(function(){getStream(cam)}, 5000);
-        }
-    }
-
-    setTimeout(connect, 1000);*/
-    //setTimeout(connect1, 1000);
-    //setTimeout(connect2, 1500);
-    //setTimeout(connect3, 2000);
-    //setTimeout(connect4, 2500);
 </script>
 {{end page_js}}

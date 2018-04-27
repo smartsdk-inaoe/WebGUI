@@ -64,12 +64,14 @@ response.menu = [
 		]),
 	(T('Search'), False, '#', [
 			(T('Videos'), False, URL('default', 'view'), []),
-			(T('On map'), False, URL('default', 'campusZonesMap'), [])
+			(T('User Devices'), False, URL('default', 'campusZonesMap'), []),
+			(T('Alerts'), False, URL('default', 'alerts'), [])
 		]),
 	(T('Management'), False, '#', [
 			(T('Cameras'), False, URL('default', 'cameras'), []),
 			(T('Markers'), False, URL('default', 'filters'), []),
-			(T('Users'), False, URL('default', 'users'), [])
+			(T('Users'), False, URL('default', 'users'), []),
+			(T('Add Area'), False, URL('default', 'delimitation'), [])
 		])
 ]
 

@@ -1,0 +1,82 @@
+{{extend 'kurentolayout.html'}}
+
+{{block head}}
+<link rel="stylesheet" href="{{=URL('static','css/estilos.css')}}"/>
+<!-- LEAFLET BLOCK -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+<script src="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.js"></script>
+<!-- END LEAFLET BLOCK-->
+<!-- FONT AWESOME BLOCK-->
+<script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
+<!-- END FONT AWESOME BLOCK-->
+{{end}} 
+
+{{block page_js}}
+<!-- JQUERY INSTRUCTIONS-->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<!-- END JQUERY INSTRUCTION-->
+<script src="{{=URL('static','js/delimitation.js')}}"></script>
+{{end}}
+
+<h2>Areas Delimitation</h2>
+<br>
+
+<div class="row">
+    <div class="col-sm-4 card">
+        <div class="form-group" id="FormGroup1">
+            <div class="card-header">
+                <h4 class="text-center"> Zones Delimitation</h4>
+            </div>
+            <form method="GET" action="javascript:void(0);">
+                <!-- Zone name-->
+                <br>
+                <div class="form-group">
+                    <label for="zoneName">  <i class="far fa-map"></i>  Zone name: </label>
+                    <input type="text" name="zoneName" id="zoneName" class="form-control text-center" required>
+                </div>
+
+                <!-- Address's Zone -->
+                <div class="form-group">
+                    <label for="zoneAddress"><i class="fas fa-map-marker-alt"></i>  Address's Zone: </label>
+                    <textarea class="form-control text-center" id="zoneAddress" placeholder="Insert the address of the zone" required rows="6" required></textarea>
+                </div>  
+                <div class="form-group row">   
+                    <div class="col-sm-7">
+                        <button type="button" class="btn btn-outline-info col-sm-12" onclick="searchAddress()">Search Address on Map</button>
+                    </div>  
+                    <div class="col-sm-5">
+                        <button type="button" class="btn btn-outline-danger col-sm-12" onclick="clearAddress()">Clear Address</button>
+                    </div>      
+                </div> 
+                <!-- End Address's Zone-->
+                <!-- Description Input-->
+                <div class="form-group basic-textarea">
+                    <label for="zoneDescription"> <i class="fas fa-info-circle"></i>  Zone Description: </label>
+                    <textarea class="form-control text-center" id="zoneDescription" placeholder="Brief description of the zone" required rows="4"></textarea>
+                </div>  
+                <!-- End Description Input-->
+                <br>
+                <div class="form-group row">   
+                    <div class="col-sm-6">
+                        <button type="button" id="query" onclick="saveZone()" class="col-sm-12 btn btn-success btn-rounded text-center "> Save </button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="button" id="query" onclick="clearInputsZone()" class="col-sm-12 btn btn-warning btn-rounded text-center"> Cancel </button>
+                    </div>
+                </div>
+            </form>
+            <br>
+        </div>
+    </div>
+    <div class="col-sm-8">
+        <h3 class="text-center"> Institution Map</h3>
+        <div id="mapid">
+        </div>
+        <br>
+    </div>
+</div>

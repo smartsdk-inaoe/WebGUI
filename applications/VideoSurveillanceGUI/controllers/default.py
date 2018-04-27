@@ -126,19 +126,35 @@ def cameras():
 	When the page its accessed without arguments, it displays a form to add a camera to the system.
 	"""
 	# List of available cameras
-	form = SQLFORM.grid(db.camera,searchable=False,details=False,csv=False,onvalidation=validateCam,ondelete=deleteCam)
+	form = SQLFORM.grid(db.camera,maxtextlengths={'camera.url':50},searchable=False,details=False,csv=False,onvalidation=validateCam,ondelete=deleteCam)
 	# If there is an argument in the request, then shows the 'edit camera' page with a button to return to the list of cameras
 	if request.args(0):
 		form[0][0][1][0] = 'Back'
 		form['_class'] = 'col-sm-offset-3 col-sm-6'
+		if request.args(0)=='edit':
+			form.element(_id='delete_record__row')[1] = ''
 	# When no arguments are received, the page shows a button to add a new camera
 	else:
 		form[0][0][1][0] = 'Add Camera'
 	return dict(form=form)
 
 def validateCam(form):
-	session.flash = 'In progress...'
-	redirect(URL(f='cameras'))
+	if form.vars.url.find('***:***@***')>=0:
+		redirect(URL(f='cameras'))
+	import xml.etree.ElementTree as ET
+	tree = ET.parse('/home/viva22017/KurentoBackend/config.xml')
+	root = tree.getroot()
+	element = root.find('CameraURL'+request.args(2))
+	element.text = form.vars.url
+	posUser = form.vars.url.find(':',7)
+	#user = form.vars.url[7:posUser]
+	posPwd = form.vars.url.find('@',posUser)
+	#pwd = form.vars.url[posUser+1:posPwd]
+	posIP = form.vars.url.find('/',posPwd)
+	posLast = form.vars.url.rfind('.',posPwd,posIP)
+	form.vars.url = 'rtsp://***:***@***.'+form.vars.url[posLast+1:]
+	tree.write('/home/viva22017/KurentoBackend/config.xml')
+	session.flash = 'Camera updated. Click on "Apply changes" to update the stream'
 
 def deleteCam(table, id):
 	session.flash = 'Action not available...'
@@ -173,7 +189,7 @@ def filters():
 						   #Field("DogDetection",type="boolean",label="Dog Detection"),
 						   #Field("DogDetectionM",requires=IS_IN_SET(methods,zero=None)),
 						   #Field("DogDetectionC"))
-	tree = ET.parse('/home/viva22017/SmartSecurityApp/kurento/label_config.xml')
+	tree = ET.parse('/path/to/kurento/label_config.xml')
 	root = tree.getroot()
 	# Read values for each detector in the file and populate the form
 	for fiN,foN in zip(fileNames,formNames):
@@ -201,7 +217,7 @@ def filters():
 			if form.vars[foN+'M']=='3':
 				element = root.find(fiN+'Text')
 				element.text = str(request.vars[foN+'T'])
-		tree.write('/home/viva22017/SmartSecurityApp/kurento/label_config.xml')
+		tree.write('/path/to/kurento/label_config.xml')
 		response.flash = 'Filters updated successfully'
 	return dict(form=form,names=formNames)
 
@@ -277,6 +293,12 @@ def campusZonesMap():
 	This view will allow the search and localization of users in the map.
 	"""
 	return dict(message = T('Institution Map'))
+
+def alerts():
+    return dict()
+
+def delimitation():
+    return dict()
 	
 @auth.requires(auth.has_membership(auth.id_group('Administrator')) or auth.has_membership(auth.id_group('Security')))
 def onlineMap():

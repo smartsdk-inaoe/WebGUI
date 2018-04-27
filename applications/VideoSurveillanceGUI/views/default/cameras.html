@@ -11,3 +11,25 @@
 </h1>
 {{end}}
 {{=form}}
+<br>
+{{if not request.args(0):}}
+<a id="update" href="#" class="btn btn-success" onclick="updateCams()">Apply changes</a>
+{{pass}}
+<script type="text/javascript">
+function updateCams() { 
+    var ws = new WebSocket(wsaddress); 
+    ws.onopen = sendMessage; 
+    function sendMessage() {
+        var message = {id : 'restartCameras'};
+        var jsonMessage = JSON.stringify(message);
+        console.log('Sending message: ' + jsonMessage);
+        try{
+            ws.send(jsonMessage);
+            $.web2py.flash("Stream updated");
+        }catch(error){
+            console.error('('+this.name+') Error: '+error.message);
+        }
+        ws.close();
+    }
+}
+</script>
