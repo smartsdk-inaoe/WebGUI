@@ -68,7 +68,6 @@
 		c{{=cid}}.ws.onopen = function(){start(c{{=cid}})};
 		document.getElementById('cam{{=cid}}').childNodes[1].innerHTML=c{{=cid}}.name;
 		{{pass}}
-		document.getElementById('live_view').childNodes[1].innerHTML=name;
 		{{c=request.args(0) or '1'}}
 		{{if int(c)>ncam:}}
 		var name = "Camera {{=c}} (Not connected)";
@@ -77,6 +76,7 @@
 		currentC = c{{=c}};
 		updateCam();
 		{{pass}}
+		document.getElementById('live_view').childNodes[1].innerHTML=name;
 	}
 
 	window.onbeforeunload = function() {

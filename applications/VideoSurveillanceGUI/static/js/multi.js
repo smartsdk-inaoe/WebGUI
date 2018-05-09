@@ -84,6 +84,14 @@ function start(cam) {
         	                case 'videoInfo':
 	                                	cam.stream = true;
                                                 break;
+        	                case 'streamStatus':
+                                                if(parsedMessage.status!='true'){
+                                                    cam.stream = true;
+                                                    //console.log('camera '+cam.id+': '+parsedMessage.status);
+                                                    cam.container.style.background = '';
+                                                    cam.container.poster = '../static/images/stream-error.png';
+                                                }
+                                                break;
 				default:
                                                 break;
 			}
