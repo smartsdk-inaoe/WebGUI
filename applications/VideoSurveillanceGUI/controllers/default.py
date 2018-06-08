@@ -66,7 +66,7 @@ def getVideos():
 	files=[]
 	import os
 	import yaml
-	with open('/path/to/config.yaml') as f:
+	with open('/path/to/KurentoBackend/config.yaml') as f:
 		dataMap=yaml.safe_load(f)
 	for f in os.listdir(dataMap['video path']):
 		# Files have a structured name: eventType_camera_date_time example: 0_1_2018-02-12_10-10-58.avi 
@@ -189,7 +189,7 @@ def filters():
 						   #Field("DogDetection",type="boolean",label="Dog Detection"),
 						   #Field("DogDetectionM",requires=IS_IN_SET(methods,zero=None)),
 						   #Field("DogDetectionC"))
-	tree = ET.parse('/path/to/kurento/label_config.xml')
+	tree = ET.parse('/path/to/KurentoBackend/label_config.xml')
 	root = tree.getroot()
 	# Read values for each detector in the file and populate the form
 	for fiN,foN in zip(fileNames,formNames):
@@ -217,7 +217,7 @@ def filters():
 			if form.vars[foN+'M']=='3':
 				element = root.find(fiN+'Text')
 				element.text = str(request.vars[foN+'T'])
-		tree.write('/path/to/kurento/label_config.xml')
+		tree.write('/path/to/KurentoBackend/label_config.xml')
 		response.flash = 'Filters updated successfully'
 	return dict(form=form,names=formNames)
 
